@@ -35,15 +35,9 @@ const SensorDetailsSection = () => {
     ];
 
     const handleShowModal = (sensor) => {
-        // --- SEGUIMIENTO GA4: EVENTO CLIC EN INFO DE SENSOR ---
-        if (window.dataLayer) {
-            window.dataLayer.push({
-                event: 'sensor_info_view', // Nombre del evento de GA4
-                sensor_name: sensor.name // Parámetro: Nombre del sensor
-            });
-            console.log("GTM Evento: sensor_info_view - ", sensor.name);
-        }
-        // --- FIN SEGUIMIENTO GA4 ---
+        // --- SEGUIMIENTO GTM ELIMINADO ---
+        // Se eliminó el código de window.dataLayer.push
+        // --- FIN SEGUIMIENTO ---
 
         setSelectedSensor(sensor);
         setShowModal(true);
@@ -62,8 +56,8 @@ const SensorDetailsSection = () => {
                             <Card.Body>
                                 <Card.Title>{sensor.name}</Card.Title>
                                 <Card.Text>{sensor.description}</Card.Text>
-                                <Button 
-                                    variant="outline-primary" 
+                                <Button
+                                    variant="outline-primary"
                                     onClick={() => handleShowModal(sensor)} // Llama a la función que dispara el evento
                                 >
                                     Ver más detalles

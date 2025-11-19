@@ -21,7 +21,7 @@ if (typeof window !== 'undefined') {
 }
 
 const DESTINO_LAT = 20.2464;
-const DESTINO_LNG = -99.2066; 
+const DESTINO_LNG = -99.2066;
 const DESTINO_NOMBRE = "7ma Demarcación, Mixquiahuala";
 
 const RutaMapa = () => {
@@ -74,16 +74,9 @@ const RutaMapa = () => {
             return;
         }
 
-        // --- SEGUIMIENTO GA4: EVENTO GENERAR RUTA (al iniciar el proceso) ---
-        if (window.dataLayer) {
-            window.dataLayer.push({
-                event: 'generate_route', // Nombre del evento de GA4
-                route_type: 'geolocation_start', // Parámetro adicional para indicar el inicio
-                destination: DESTINO_NOMBRE
-            });
-            console.log("GTM Evento: generate_route - Solicitud de ubicación");
-        }
-        // --- FIN SEGUIMIENTO GA4 ---
+        // --- SEGUIMIENTO GTM ELIMINADO ---
+        // Se eliminó el código de window.dataLayer.push
+        // --- FIN SEGUIMIENTO ---
 
 
         setIsLoading(true);

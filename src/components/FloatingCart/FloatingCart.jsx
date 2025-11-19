@@ -7,20 +7,8 @@ const FloatingCart = () => {
     // Calcula el número total de productos
     const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-    // Función de seguimiento
-    const handleCartClick = () => {
-        if (window.dataLayer) {
-            window.dataLayer.push({
-                event: 'cart_click',
-                item_count: totalItems
-            });
-            console.log("GTM Evento: cart_click con items:", totalItems);
-        }
-    };
-
     return (
         <div
-            onClick={handleCartClick} // Agregamos el evento al contenedor principal
             style={{
                 position: 'fixed',
                 bottom: '2rem',

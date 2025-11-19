@@ -20,19 +20,9 @@ const AuthModal = ({ show, handleClose }) => {
 
         try {
             if (key === 'login') {
-                const userCredential = await login(email, password);
+                await login(email, password);
 
-                // --- SEGUIMIENTO GA4: EVENTO DE LOGIN EXITOSO ---
-                // Se dispara SÓLO si el login fue exitoso y se tiene el UID
-                if (window.dataLayer && userCredential.user.uid) {
-                    window.dataLayer.push({
-                        event: 'user_login',
-                        method: 'email_password',
-                        user_id: userCredential.user.uid // Enviamos el user_id
-                    });
-                    console.log("GTM Evento: user_login exitoso para:", userCredential.user.uid);
-                }
-                // --- FIN SEGUIMIENTO GA4 ---
+                // NOTA: Código de seguimiento (dataLayer.push) eliminado.
 
                 handleClose(); // Cerrar modal al éxito
             } else {
@@ -53,18 +43,9 @@ const AuthModal = ({ show, handleClose }) => {
     // Manejo de Login con Google (también incluye el seguimiento)
     const handleGoogleLogin = async () => {
         try {
-            const userCredential = await signInWithGoogle();
+            await signInWithGoogle();
 
-            // --- SEGUIMIENTO GA4: EVENTO DE LOGIN EXITOSO (Google) ---
-            if (window.dataLayer && userCredential.user.uid) {
-                window.dataLayer.push({
-                    event: 'user_login',
-                    method: 'google',
-                    user_id: userCredential.user.uid
-                });
-                console.log("GTM Evento: user_login (Google) exitoso para:", userCredential.user.uid);
-            }
-            // --- FIN SEGUIMIENTO GA4 ---
+            // NOTA: Código de seguimiento (dataLayer.push) eliminado.
 
             handleClose(); // Cerrar modal al éxito
         } catch (err) {
