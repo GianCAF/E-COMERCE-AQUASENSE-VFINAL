@@ -30,16 +30,30 @@ const FAQ = () => {
         },
     ];
 
+    // Función que se llama al expandir o contraer una pregunta
+    const handleAccordionToggle = (questionTitle) => {
+        // --- SEGUIMIENTO GA4: EVENTO CLICK EN FAQ ---
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'faq_click', // Nombre del evento
+                question: questionTitle // Parámetro del evento
+            });
+            console.log("GTM Evento: faq_click - ", questionTitle);
+        }
+        // --- FIN SEGUIMIENTO GA4 ---
+    };
+
     return (
         <Container className="my-5" id="faq">
             <h2 className="text-center mb-4">Preguntas Frecuentes</h2>
             <Accordion defaultActiveKey="0">
                 {faqs.map((faq) => (
-                    <Accordion.Item
-                        eventKey={faq.id}
-                        key={faq.id}
+                    <Accordion.Item 
+                        eventKey={faq.id} 
+                        key={faq.id} 
                         className="mb-2 shadow-sm"
-                    // ELIMINAMOS el onClick del seguimiento de GTM
+                        // El evento onClick se agrega al Header para capturar la acción de clic
+                        onClick={() => handleAccordionToggle(faq.question)} 
                     >
                         <Accordion.Header>{faq.question}</Accordion.Header>
                         <Accordion.Body>{faq.answer}</Accordion.Body>
