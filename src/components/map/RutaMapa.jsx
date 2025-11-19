@@ -21,7 +21,7 @@ if (typeof window !== 'undefined') {
 }
 
 const DESTINO_LAT = 20.2464;
-const DESTINO_LNG = -99.2066;
+const DESTINO_LNG = -99.2066; 
 const DESTINO_NOMBRE = "7ma Demarcación, Mixquiahuala";
 
 const RutaMapa = () => {

@@ -62,8 +62,8 @@ const SensorDetailsSection = () => {
                             <Card.Body>
                                 <Card.Title>{sensor.name}</Card.Title>
                                 <Card.Text>{sensor.description}</Card.Text>
-                                <Button
-                                    variant="outline-primary"
+                                <Button 
+                                    variant="outline-primary" 
                                     onClick={() => handleShowModal(sensor)} // Llama a la función que dispara el evento
                                 >
                                     Ver más detalles
