@@ -1,5 +1,3 @@
-// RutaMapa.jsx
-
 import React, { useEffect, useState, useRef } from 'react';
 // 1. Importa los estilos CSS de las librerías
 import 'leaflet/dist/leaflet.css';
@@ -22,8 +20,8 @@ if (typeof window !== 'undefined') {
     });
 }
 
-const DESTINO_LAT = 20.2464;{/*20.205128623481347*/}
-const DESTINO_LNG = -99.2066; {/*-99.22281526188324*/ }
+const DESTINO_LAT = 20.2464;
+const DESTINO_LNG = -99.2066;
 const DESTINO_NOMBRE = "7ma Demarcación, Mixquiahuala";
 
 const RutaMapa = () => {
@@ -76,6 +74,18 @@ const RutaMapa = () => {
             return;
         }
 
+        // --- SEGUIMIENTO GA4: EVENTO GENERAR RUTA (al iniciar el proceso) ---
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'generate_route', // Nombre del evento de GA4
+                route_type: 'geolocation_start', // Parámetro adicional para indicar el inicio
+                destination: DESTINO_NOMBRE
+            });
+            console.log("GTM Evento: generate_route - Solicitud de ubicación");
+        }
+        // --- FIN SEGUIMIENTO GA4 ---
+
+
         setIsLoading(true);
         setMensaje("🗺️ Obteniendo ubicación actual...");
 
@@ -118,6 +128,7 @@ const RutaMapa = () => {
             },
             (error) => {
                 let errorMsg = "❌ Error al obtener la ubicación. ";
+                // Manejo de errores (mantener limpio)
                 if (error.code === error.PERMISSION_DENIED) {
                     errorMsg += "El usuario denegó el permiso de ubicación.";
                 } else if (error.code === error.POSITION_UNAVAILABLE) {
@@ -142,7 +153,7 @@ const RutaMapa = () => {
 
             <div style={styles.controlesRuta}>
                 <button
-                    onClick={trazarRutaDesdeUbicacion}
+                    onClick={trazarRutaDesdeUbicacion} // Llama a la función que dispara el evento
                     disabled={isLoading}
                     style={{
                         ...styles.button,

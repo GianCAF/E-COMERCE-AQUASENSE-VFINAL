@@ -1,4 +1,3 @@
-// src/components/SensorDetailsSection/SensorDetailsSection.jsx
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Image } from 'react-bootstrap';
 
@@ -36,6 +35,16 @@ const SensorDetailsSection = () => {
     ];
 
     const handleShowModal = (sensor) => {
+        // --- SEGUIMIENTO GA4: EVENTO CLIC EN INFO DE SENSOR ---
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'sensor_info_view', // Nombre del evento de GA4
+                sensor_name: sensor.name // Parámetro: Nombre del sensor
+            });
+            console.log("GTM Evento: sensor_info_view - ", sensor.name);
+        }
+        // --- FIN SEGUIMIENTO GA4 ---
+
         setSelectedSensor(sensor);
         setShowModal(true);
     };
@@ -53,7 +62,10 @@ const SensorDetailsSection = () => {
                             <Card.Body>
                                 <Card.Title>{sensor.name}</Card.Title>
                                 <Card.Text>{sensor.description}</Card.Text>
-                                <Button variant="outline-primary" onClick={() => handleShowModal(sensor)}>
+                                <Button
+                                    variant="outline-primary"
+                                    onClick={() => handleShowModal(sensor)} // Llama a la función que dispara el evento
+                                >
                                     Ver más detalles
                                 </Button>
                             </Card.Body>
