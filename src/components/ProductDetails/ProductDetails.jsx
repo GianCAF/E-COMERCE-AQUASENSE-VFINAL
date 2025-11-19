@@ -19,7 +19,7 @@ const ProductDetails = () => {
         // Datos del producto
         id: 'aquasense-monitor-123',
         name: 'AquaSense - Monitor de Calidad de Agua Inteligente',
-        price: 22390.00, // Ajuste de precio a formato flotante para el carrito
+        price: 120, // Ajuste de precio a formato flotante para el carrito
         discount: ' Hasta 12 meses sin intereses',
         deliveryTime: 'Llega en una o dos semanas',
         stock: 25,
