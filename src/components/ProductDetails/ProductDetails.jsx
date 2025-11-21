@@ -1,11 +1,8 @@
-// src/components/ProductDetails/ProductDetails.jsx
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, ListGroup, Button, Image, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse } from 'react-bootstrap'; // Importamos Collapse
 import { useCart } from '../../context/CartContext';
-import ReviewsSection from '../ReviewsSection/ReviewsSection'; // Importar el componente de reseñas dinámicas
-
-// --- TUS IMPORTACIONES DE IMÁGENES ---
-import imagen1 from '../../imgcar/imagen1.jpg';
+// Importa la imagen que ya te funciona
+import imagen1 from '../../imgcar/imagen1.jpg'; //producto
 import imagen2 from '../../imgcar/imag2.jpg';
 import imagen3 from '../../imgcar/img3.jpg';
 import imagen4 from '../../imgcar/img4.jpg';
@@ -16,21 +13,22 @@ const ProductDetails = () => {
     const { addToCart } = useCart();
 
     const productData = {
-        // Datos del producto
+        // Es crucial que el producto tenga un 'id' único
         id: 'aquasense-monitor-123',
         name: 'AquaSense - Monitor de Calidad de Agua Inteligente',
-        price: 120, // Ajuste de precio a formato flotante para el carrito
-        discount: ' Hasta 12 meses sin intereses',
+        price: 22390,
+        discount: '12 meses sin intereses',
         deliveryTime: 'Llega en una o dos semanas',
         stock: 25,
         seller: 'AquaSense Oficial',
         sellerLink: '#',
-        rating: 4.5, // Se mantiene para mostrar en la info principal
-        reviewsCount: 37, // Se mantiene para mostrar en la info principal
+        rating: 4.5, // Valor de ejemplo
+        reviewsCount: 37, // Valor de ejemplo
         description: `El AquaSense es la solución definitiva para el monitoreo de la calidad del agua. Con un diseño robusto y sensores de alta precisión (pH, Turbidez, Conductividad), te permite tener control total sobre tu fuente de agua en tiempo real.`,
+        longDescription: `El AquaSense no solo mide, sino que predice. Utiliza algoritmos de IA para analizar las tendencias de los datos y alertarte antes de que un problema de calidad del agua se vuelva crítico. Incluye una batería de iones de litio de 3000mAh que dura hasta 6 meses con una sola carga. Ideal para monitoreo remoto en estanques, acuarios industriales o pozos profundos.`,
         features: [
             'Monitoreo en tiempo real de pH, Turbidez y Conductividad',
-            'Diseño compacto y resistente al agua',
+            'Diseño compacto y resistente al agua (IP67)',
             'Conectividad Wi-Fi para acceso remoto a datos',
             'Alertas personalizables en tu smartphone',
             'Batería de larga duración',
@@ -43,12 +41,15 @@ const ProductDetails = () => {
             { label: 'Batería', value: 'Ion-Litio 3000mAh' },
             { label: 'Dimensiones', value: '15cm x 10cm x 5cm' },
         ],
+        reviews: [
+            { author: 'Juan P.', rating: 5, comment: '¡Excelente producto! Muy fácil de usar y la precisión es increíble. Ahora sé exactamente qué pasa con mi agua.', date: '2023-10-26' },
+            { author: 'Maria G.', rating: 4, comment: 'Funciona muy bien, aunque la app podría mejorar en diseño. Aun así, cumple su función perfectamente.', date: '2023-10-20' },
+        ]
     };
 
-    // --- ESTADOS PARA GALERÍA Y ZOOM ---
     const [mainImage, setMainImage] = useState(imagen1);
-    const [zoomStyle, setZoomStyle] = useState({});
-
+    const [openSpecs, setOpenSpecs] = useState(false); // Nuevo estado para especificaciones
+    const [openDescription, setOpenDescription] = useState(false); // Nuevo estado para descripción
     const productImages = [
         { src: imagen1 },
         { src: imagen2 },
@@ -63,74 +64,28 @@ const ProductDetails = () => {
 
     const handleThumbnailClick = (imageSrc) => {
         setMainImage(imageSrc);
-        // Resetea el zoom al cambiar de imagen
-        setZoomStyle({});
     };
 
     const handleAddToCart = () => {
         addToCart(productData);
-        alert(`${productData.name} ha sido agregado al carrito.`);
+        // Usamos console.log en lugar de alert
+        console.log(`${productData.name} ha sido agregado al carrito.`);
     };
-
-    const renderStars = (rating) => {
-        const fullStar = '★'.repeat(Math.floor(rating));
-        const emptyStar = '☆'.repeat(5 - Math.floor(rating));
-        return <span className="text-warning">{fullStar}{emptyStar}</span>;
-    };
-
-
-    // --- LÓGICA DEL ZOOM (Implementada tal como la proporcionaste) ---
-    const handleMouseMove = (e) => {
-        if (window.innerWidth < 768) return;
-
-        const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-
-        const x = (e.clientX - left) / width;
-        const y = (e.clientY - top) / height;
-
-        const zoomFactor = 2;
-
-        // Calcula el desplazamiento
-        const translateX = -(x * 100 * zoomFactor - x * 100);
-        const translateY = -(y * 100 * zoomFactor - y * 100);
-
-        setZoomStyle({
-            transform: `scale(${zoomFactor}) translate(${translateX / zoomFactor}%, ${translateY / zoomFactor}%)`,
-            transition: 'transform 0.1s ease-out',
-            transformOrigin: '0 0',
-            width: `${100 / zoomFactor * 100}%`,
-            height: `${100 / zoomFactor * 100}%`,
-        });
-    };
-
-    const handleMouseLeave = () => {
-        setZoomStyle({});
-    };
-    // ------------------------------------------------------------------
 
     return (
         <Container className="my-5" id="product-info">
             <Row>
-                {/* Columna de Imágenes y Miniaturas */}
+                {/* Columna de Imágenes */}
                 <Col md={5}>
-
-                    {/* Contenedor principal de la imagen: ZOOM AREA */}
+                    {/* Contenedor principal de la imagen: Fija la altura a 400px */}
                     <div
-                        className="position-relative d-flex justify-content-center align-items-center border shadow-sm mb-3"
-                        style={{ height: '400px', overflow: 'hidden', cursor: 'zoom-in' }}
-                        onMouseMove={handleMouseMove}
-                        onMouseLeave={handleMouseLeave}
+                        className="position-relative mb-3 d-flex justify-content-center align-items-center border shadow-sm rounded-4"
+                        style={{ height: '400px', overflow: 'hidden' }}
                     >
-                        {/* Imagen principal: Aplica el zoomStyle para la lupa */}
                         <Image
                             src={mainImage}
                             alt={productData.name}
-                            style={{
-                                objectFit: 'contain',
-                                maxHeight: '100%',
-                                maxWidth: '100%',
-                                ...zoomStyle, // Aplica los estilos de zoom
-                            }}
+                            style={{ objectFit: 'contain', maxHeight: '100%', maxWidth: '100%' }}
                         />
                     </div>
 
@@ -139,7 +94,7 @@ const ProductDetails = () => {
                         {productImages.map((img, index) => (
                             <div
                                 key={index}
-                                className={`thumbnail-wrapper me-2 border ${mainImage === img.src ? 'border-primary border-3' : ''}`}
+                                className={`thumbnail-wrapper me-2 mb-2 border rounded-3 ${mainImage === img.src ? 'border-primary border-3' : ''}`}
                                 onClick={() => handleThumbnailClick(img.src)}
                                 style={{
                                     width: '90px',
@@ -166,13 +121,14 @@ const ProductDetails = () => {
                 <Col md={4}>
                     <h1 className="mb-2">{productData.name}</h1>
                     <div className="d-flex align-items-center mb-3">
-                        {/* <div className="text-warning me-2">
-                            {renderStars(productData.rating)}
+                        <div className="text-warning me-2">
+                            {'★'.repeat(Math.floor(productData.rating))}
+                            {'☆'.repeat(5 - Math.floor(productData.rating))}
                         </div>
-                         <span>({productData.reviewsCount} calificaciones)</span> */}
+                        <span>({productData.reviewsCount} calificaciones)</span>
                     </div>
 
-                    <h2 className="text-primary my-3">${productData.price.toFixed(2)} MXN</h2>
+                    <h2 className="text-primary my-3 fw-bold">${productData.price.toFixed(2)} MXN</h2>
                     <p className="text-success">{productData.discount}</p>
 
                     <h5 className="mt-4">Características principales:</h5>
@@ -186,7 +142,7 @@ const ProductDetails = () => {
 
                 {/* Columna de Opciones de Compra */}
                 <Col md={3}>
-                    <Card className="shadow-sm">
+                    <Card className="shadow-sm rounded-4">
                         <Card.Body>
                             <Card.Title className="text-success">
                                 {productData.deliveryTime}
@@ -198,13 +154,13 @@ const ProductDetails = () => {
                                 {productData.stock > 0 && `(${productData.stock} disponibles)`}
                             </Card.Text>
 
-                            <Button variant="primary" size="lg" className="w-100 mb-2" disabled={productData.stock === 0}>
+                            <Button variant="primary" size="lg" className="w-100 mb-2 rounded-3" disabled={productData.stock === 0}>
                                 Comprar ahora
                             </Button>
                             <Button
                                 variant="outline-primary"
                                 size="lg"
-                                className="w-100"
+                                className="w-100 rounded-3"
                                 onClick={handleAddToCart}
                                 disabled={productData.stock === 0}
                             >
@@ -224,11 +180,10 @@ const ProductDetails = () => {
                         </Card.Body>
                     </Card>
 
-                    <Card className="mt-4 shadow-sm">
+                    <Card className="mt-4 shadow-sm rounded-4">
                         <Card.Body>
                             <Card.Title>Medios de Pago</Card.Title>
                             <div className="d-flex flex-wrap gap-2 mt-3">
-                                {/* Usando las variables importadas */}
                                 <Image src={visa} height="35px" alt="Visa" />
                                 <Image src={master} height="35px" alt="Mastercard" />
                             </div>
@@ -238,34 +193,94 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* Características Detalladas (expandido) */}
+            {/* --- SECCIONES COLAPSABLES --- */}
+
+            {/* 1. Características Detalladas (Especificaciones) */}
             <Row className="mt-5">
                 <Col md={12}>
-                    <h3 className="mb-3">Características del producto</h3>
-                    <Row>
-                        {productData.specs.map((spec, index) => (
-                            <Col sm={6} md={4} key={index} className="mb-3">
-                                <strong>{spec.label}:</strong> {spec.value}
-                            </Col>
-                        ))}
-                    </Row>
+                    <h3
+                        onClick={() => setOpenSpecs(!openSpecs)}
+                        aria-controls="specs-collapse"
+                        aria-expanded={openSpecs}
+                        className="mb-3 text-primary cursor-pointer hover-underline"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Características Detalladas
+                        <i className={`bi ms-2 bi-chevron-${openSpecs ? 'up' : 'down'}`}></i>
+                    </h3>
+                    <Collapse in={openSpecs}>
+                        <div id="specs-collapse">
+                            <Row className="border p-3 rounded-3 bg-light">
+                                {productData.specs.map((spec, index) => (
+                                    <Col sm={6} md={4} key={index} className="mb-3">
+                                        <strong>{spec.label}:</strong> {spec.value}
+                                    </Col>
+                                ))}
+                            </Row>
+                        </div>
+                    </Collapse>
                     <hr />
                 </Col>
             </Row>
 
-            {/* Descripción Detallada */}
+            {/* 2. Descripción Detallada */}
             <Row className="mt-4">
                 <Col md={12}>
-                    <h3 className="mb-3">Descripción</h3>
-                    <p>{productData.description}</p>
-                    <Button variant="link" className="p-0">Ver descripción completa</Button>
+                    <h3
+                        onClick={() => setOpenDescription(!openDescription)}
+                        aria-controls="description-collapse"
+                        aria-expanded={openDescription}
+                        className="mb-3 text-primary cursor-pointer hover-underline"
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Descripción del Producto
+                        <i className={`bi ms-2 bi-chevron-${openDescription ? 'up' : 'down'}`}></i>
+                    </h3>
+                    <Collapse in={openDescription}>
+                        <div id="description-collapse" className="border p-3 rounded-3 bg-light">
+                            <p>{productData.description}</p>
+                            <p className="fst-italic">{productData.longDescription}</p>
+                        </div>
+                    </Collapse>
                     <hr />
                 </Col>
             </Row>
 
-            {/* SECCIÓN DE RESEÑAS DINÁMICAS (Reemplaza a la sección estática) */}
-            <ReviewsSection productId={'aquasense-monitor-123'} />
+            {/* --- FIN SECCIONES COLAPSABLES --- */}
 
+            {/* Opiniones del Producto (se mantiene visible) */}
+            <Row className="mt-4">
+                <Col md={12}>
+                    <h3 className="mb-3">Opiniones del producto</h3>
+                    <div className="d-flex align-items-center mb-3">
+                        <h4 className="me-2">{productData.rating}</h4>
+                        <div className="text-warning">
+                            {'★'.repeat(Math.floor(productData.rating))}
+                            {'☆'.repeat(5 - Math.floor(productData.rating))}
+                        </div>
+                        <span className="ms-2">({productData.reviewsCount} calificaciones)</span>
+                    </div>
+
+                    <h5 className="mt-4">Opiniones destacadas</h5>
+                    {productData.reviews.map((review, index) => (
+                        <Card key={index} className="mb-3 shadow-sm rounded-3">
+                            <Card.Body>
+                                <div className="d-flex justify-content-between">
+                                    <h6 className="mb-1">{review.author}</h6>
+                                    <small className="text-muted">{review.date}</small>
+                                </div>
+                                <div className="text-warning mb-2">
+                                    {'★'.repeat(review.rating)}
+                                    {'☆'.repeat(5 - review.rating)}
+                                </div>
+                                <Card.Text>{review.comment}</Card.Text>
+                            </Card.Body>
+                        </Card>
+                    ))}
+                    <Button variant="outline-secondary">Ver todas las opiniones</Button>
+                    <hr />
+                </Col>
+            </Row>
         </Container>
     );
 };

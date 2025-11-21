@@ -14,13 +14,9 @@ import Footer from './components/Footer/Footer';
 import CartPage from './components/CartPage/CartPage';
 import PurchaseFlow from './components/PurchaseFlow/PurchaseFlow';
 import RutaMapa from './components/map/RutaMapa.jsx';
-// Asegúrate de que esta ruta sea correcta: si MonitoringPage está en /pages/, ajusta
 import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
-import BottomNavBar from './components/BottomNavBar/BottomNavBar'; // Importamos la nueva barra
-
-// --- ELIMINACIÓN DEL RASTREADOR DE RUTAS GTM (RouteChangeTracker) ---
-// Se eliminó la dependencia a useLocation y useEffect innecesaria aquí.
+import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 
 // Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
 const HelpPage = () => (
@@ -41,18 +37,14 @@ const HelpPage = () => (
     <RutaMapa />
     <FAQ />
     <ContactForm />
-  </>
-);
 
-// Componente para la nueva sección Técnica/Solución (Icono Herramienta)
-const TechnicalPage = () => (
-  <>
-    <h2 className="text-center my-5 text-primary">Detalles Técnicos y Solución de Problemas</h2>
+    {/* El contenido de 'Técnico' ahora se mueve a la sección de Ayuda/Recursos para que no se pierda */}
     <SensorDetailsSection />
     <ProblemSolver />
   </>
 );
 
+// ELIMINAMOS EL COMPONENTE TechnicalPage
 
 // --- VALIDACIÓN DE AUTENTICACIÓN ---
 const AuthWrapper = ({ element }) => {
@@ -67,11 +59,12 @@ const AuthWrapper = ({ element }) => {
 // Componente para la página de inicio (Vista "Casa" o Principal)
 const HomePage = () => (
   <>
+    {/* Contenido principal: Carusel, Detalles de Producto, Membresías */}
     <HeroProduct />
     <ProductDetails />
     <MembershipPrograms />
     <PurchaseFlow />
-    <ContactForm />
+    {/* ELIMINAMOS: ContactForm */}
   </>
 );
 
@@ -84,11 +77,10 @@ function App() {
           {/* 1. RUTA PRINCIPAL (Icono Casa) */}
           <Route path="/" element={<HomePage />} />
 
-          {/* 2. RUTA AYUDA (Icono Pregunta) */}
+          {/* 2. RUTA AYUDA (Icono Pregunta) - Ahora contiene el contenido Técnico */}
           <Route path="/ayuda" element={<HelpPage />} />
 
-          {/* 3. RUTA TÉCNICA (Icono Herramienta) */}
-          <Route path="/tecnico" element={<TechnicalPage />} />
+          {/* ELIMINAMOS LA RUTA TÉCNICA */}
 
           {/* Otras rutas */}
           <Route path="/cart" element={<CartPage />} />

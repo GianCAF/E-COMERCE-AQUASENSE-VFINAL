@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Nav, Button, Modal, Container } from 'react-bootstrap';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Asegúrate de que useLocation esté aquí
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import AuthModal from '../AuthModal/AuthModal';
 
@@ -29,17 +29,15 @@ const BottomNavBar = () => {
         handleShowAuthModal();
     };
 
-    // Array de botones para generar la barra
+    // Array de botones para generar la barra - ELIMINAMOS 'tech'
     const navItems = [
-        // 1. HOME
+        // 1. HOME (Icono Casa)
         { id: 'home', icon: 'bi-house-fill', label: 'Inicio', path: '/' },
-        // 2. TIPS/AYUDA (Pregunta)
+        // 2. AYUDA/RECURSOS (Icono Pregunta)
         { id: 'tips', icon: 'bi-question-circle-fill', label: 'Ayuda', path: '/ayuda' },
-        // 3. TÉCNICO/SOLUCIÓN (Herramienta)
-        { id: 'tech', icon: 'bi-gear-fill', label: 'Técnico', path: '/tecnico' },
-        // 4. MONITOREO (Usa función para validación de login)
+        // 3. MONITOREO (Usa función para validación de login)
         { id: 'monitor', icon: 'bi-graph-up', label: 'Monitoreo', action: handleMonitorClick, path: '/monitoreo' },
-        // 5. CARRITO
+        // 4. CARRITO (Icono Carrito)
         { id: 'cart', icon: 'bi-cart-fill', label: 'Carrito', path: '/cart' },
     ];
 
@@ -59,13 +57,12 @@ const BottomNavBar = () => {
             {/* d-lg-none oculta la barra en escritorio, es ideal para móvil */}
             <div className="fixed-bottom w-100 bg-white border-top shadow-lg d-lg-none d-flex justify-content-around p-1">
                 {navItems.map((item) => {
-                    // CORRECCIÓN: Declaramos la variable dentro del scope del map,
-                    // y usamos la función isActive que accede al hook location.
+                    // La variable que define el color activo o inactivo
                     const currentColor = isActive(item.path) ? '#007bff' : '#6c757d';
 
                     return (
                         <div key={item.id} className="text-center" style={{ flexGrow: 1 }}>
-                            {item.path !== '/monitoreo' ? ( // Usa Link para Home, Ayuda, Técnico, Carrito
+                            {item.path !== '/monitoreo' ? ( // Usa Link para Home, Ayuda, Carrito
                                 <Link
                                     to={item.path}
                                     className="d-flex flex-column align-items-center text-decoration-none py-1"
