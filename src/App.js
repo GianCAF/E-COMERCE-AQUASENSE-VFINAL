@@ -16,7 +16,7 @@ import Footer from './components/Footer/Footer';
 import CartPage from './components/CartPage/CartPage';
 import PurchaseFlow from './components/PurchaseFlow/PurchaseFlow';
 import RutaMapa from './components/map/RutaMapa.jsx';
-import MonitoringPage from './pages/MonitoringPage';
+import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 
