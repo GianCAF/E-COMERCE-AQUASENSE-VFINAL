@@ -5,7 +5,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './components/Header/Header';
 import HeroProduct from './components/HeroProduct/HeroProduct';
 import ProductDetails from './components/ProductDetails/ProductDetails';
-// Importamos solo por si los necesitamos más adelante, pero no se usan en las rutas actuales.
+// Mantenemos los imports aunque ya no se usen en las rutas actuales,
+// ya que podríamos necesitarlos más adelante.
 import SensorDetailsSection from './components/SensorDetailsSection/SensorDetailsSection';
 import MembershipPrograms from './components/MembershipPrograms/MembershipPrograms';
 import { ContactForm } from './components/ContactForm/ContactForm.jsx';
@@ -40,11 +41,6 @@ const HelpPage = () => (
     {/* Elementos que permanecen en ayuda */}
     <FAQ />
     <ContactForm />
-
-    {/* ELEMENTOS REMOVIDOS DE LA RUTA /AYUDA: */}
-    {/* <RutaMapa /> */}
-    {/* <SensorDetailsSection /> */}
-    {/* <ProblemSolver /> */}
   </>
 );
 
@@ -60,14 +56,14 @@ const AuthWrapper = ({ element }) => {
 };
 
 // Componente para la página de inicio (Vista "Casa" o Principal)
-// **PÁGINA PRINCIPAL MODIFICADA:** SE REMOVIERON LAS MEMBRESÍAS.
+// **PÁGINA PRINCIPAL MODIFICADA:** SE REMUEVE DEFINITIVAMENTE MembershipPrograms.
 const HomePage = () => (
   <>
     {/* Contenido principal: Carusel y Detalles de Producto */}
     <HeroProduct />
     <ProductDetails />
 
-    {/* ¡REMOVIDO! Ya no se muestran los programas de membresía */}
+    {/* ¡REMOVIDO! MembershipPrograms ya NO se renderiza aquí */}
     {/* <MembershipPrograms /> */}
 
     {/* Flujo de Compra */}
