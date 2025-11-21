@@ -61,7 +61,6 @@ const HomePage = () => (
     {/* Contenido principal: Carusel, Detalles de Producto, Flujo de Compra */}
     <HeroProduct />
     <ProductDetails />
-    {/* REMOVIDO: MembershipPrograms */}
     <PurchaseFlow />
   </>
 );
