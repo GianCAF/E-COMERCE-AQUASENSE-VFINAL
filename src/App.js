@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -17,8 +17,10 @@ import RutaMapa from './components/map/RutaMapa.jsx';
 import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
+import { Container, Card, Image, Button, Form, Alert } from 'react-bootstrap'; // Importaciones para la página de Perfil
 
-// --- RUTAS MODULARES PARA EL MENÚ DE HAMBURGUESA ---
+
+// --- COMPONENTES DE PÁGINA (Para el Menú de Hamburguesa) ---
 
 const SensorDetailPage = () => (
   <>
@@ -48,6 +50,84 @@ const MapPage = () => (
   </>
 );
 
+// Componente para la nueva sección de Perfil (donde puede cambiar la imagen)
+const ProfilePage = () => {
+  const { currentUser, userData } = useAuth();
+  const [imageFile, setImageFile] = useState(null);
+  const [status, setStatus] = useState('');
+
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.charAt(0).toUpperCase();
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files.length > 0) {
+      setImageFile(e.target.files[0]);
+      setStatus('Archivo seleccionado. Haga clic en Subir para guardar.');
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // NOTA: La lógica real para subir la imagen a Firebase Storage y actualizar la URL
+    // del usuario en Firestore iría aquí. Esto es solo una simulación.
+    if (imageFile) {
+      setStatus('Subiendo imagen... (Simulación)');
+      setTimeout(() => {
+        setStatus('✅ ¡Imagen de perfil actualizada con éxito!');
+        // Aquí se llamaría a una función en el contexto de auth para actualizar la imagen
+        setImageFile(null); // Limpiar archivo después de "subir"
+      }, 1500);
+    } else {
+      setStatus('Seleccione un archivo de imagen primero.');
+    }
+  };
+
+  if (!currentUser || !userData) {
+    return <Alert variant="warning" className="m-5">Inicie sesión para ver su perfil.</Alert>;
+  }
+
+  return (
+    <Container className="my-5">
+      <h2 className="text-center mb-4 text-primary">Mi Perfil de Usuario</h2>
+      <Card className="shadow-lg p-4 rounded-4 mx-auto" style={{ maxWidth: '500px' }}>
+        <Card.Body>
+          <div className="text-center mb-4">
+            {/* Avatar o Iniciales */}
+            <div
+              className="mx-auto border border-secondary text-white bg-primary rounded-circle mb-3"
+              style={{ width: '100px', height: '100px', fontSize: '3rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              {/* Si tu userData tuviera una fotoURL, la usarías aquí: <Image src={userData.photoURL} roundedCircle fluid /> */}
+              {getInitials(userData.names)}
+            </div>
+            <h4>{userData.names} {userData.surnames}</h4>
+            <p className="text-muted">{currentUser.email}</p>
+          </div>
+
+          <h5 className="mb-3 border-bottom pb-2">Actualizar Imagen</h5>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Seleccionar nueva foto de perfil</Form.Label>
+              <Form.Control type="file" onChange={handleFileChange} accept="image/*" />
+            </Form.Group>
+
+            {status && <Alert variant={status.startsWith('✅') ? 'success' : 'info'} className="mt-3">{status}</Alert>}
+
+            <div className="d-grid mt-4">
+              <Button variant="primary" type="submit" disabled={!imageFile}>
+                Subir y Guardar Imagen
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
+  );
+};
+
+
 // Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
 const HelpPage = () => (
   <>
@@ -65,11 +145,11 @@ const HelpPage = () => (
       </div>
     </div>
 
-    {/* Elementos que permanecen en ayuda */}
     <FAQ />
     <ContactForm />
   </>
 );
+
 
 // --- VALIDACIÓN DE AUTENTICACIÓN ---
 const AuthWrapper = ({ element }) => {
@@ -96,7 +176,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <main style={{ paddingBottom: '70px' }}> {/* Añadimos padding para que el BottomNav no tape el contenido */}
+      <main style={{ paddingBottom: '70px' }}>
         <Routes>
           {/* 1. RUTA PRINCIPAL (Icono Casa) */}
           <Route path="/" element={<HomePage />} />
@@ -110,6 +190,12 @@ function App() {
           <Route path="/problemas" element={<ProblemSolverPage />} />
           <Route path="/mapa" element={<MapPage />} />
 
+          {/* RUTA DE PERFIL (Protegida solo si es estrictamente necesario, sino, el componente maneja el estado) */}
+          <Route
+            path="/perfil"
+            element={<AuthWrapper element={<ProfilePage />} />}
+          />
+
           {/* Otras rutas */}
           <Route path="/cart" element={<CartPage />} />
 
@@ -122,7 +208,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-      <BottomNavBar /> {/* Barra de navegación fija inferior */}
+      <BottomNavBar />
     </Router>
   );
 }

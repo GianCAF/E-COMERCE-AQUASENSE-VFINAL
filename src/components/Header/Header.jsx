@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Container, Button, NavDropdown, Modal, Offcanvas, ListGroup } from 'react-bootstrap'; // Importamos Offcanvas y ListGroup
+import { Navbar, Nav, Container, Button, NavDropdown, Modal, Offcanvas, ListGroup } from 'react-bootstrap';
 import AuthModal from '../AuthModal/AuthModal';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,6 +16,12 @@ const Header = () => {
     const handleAlertClose = () => setShowAlertModal(false);
     const handleOffcanvasClose = () => setShowOffcanvas(false); // Cierra el Offcanvas
     const handleOffcanvasShow = () => setShowOffcanvas(true); // Abre el Offcanvas
+
+    // Función para obtener la inicial del nombre
+    const getInitials = (name) => {
+        if (!name) return 'U';
+        return name.charAt(0).toUpperCase();
+    };
 
     // Efecto para verificar si se requiere mostrar el prompt de login
     useEffect(() => {
@@ -45,6 +51,9 @@ const Header = () => {
         { path: '/ayuda', label: 'Ayuda y Recursos', icon: 'bi-question-circle' },
         { path: '/monitoreo', label: 'Dashboard de Monitoreo', icon: 'bi-graph-up' },
 
+        // --- NUEVA SECCIÓN: PERFIL ---
+        { path: '/perfil', label: 'Mi Perfil', icon: 'bi-person-circle' },
+
         // --- SECCIONES OCULTAS ---
         { path: '/sensores', label: 'Detalles Técnicos y Sensores', icon: 'bi-cpu' },
         { path: '/membresias', label: 'Programas de Membresía', icon: 'bi-gem' },
@@ -52,6 +61,17 @@ const Header = () => {
         { path: '/mapa', label: 'Ubicación y Rutas (Mapa)', icon: 'bi-geo-alt' },
         { path: '/cart', label: 'Mi Carrito de Compras', icon: 'bi-cart-fill' },
     ];
+
+    // Componente para renderizar el Avatar del Usuario Logeado
+    const UserAvatar = () => (
+        <div
+            className="d-flex align-items-center justify-content-center border border-primary text-white bg-primary rounded-circle shadow-sm"
+            style={{ width: '40px', height: '40px', fontWeight: 'bold', cursor: 'pointer' }}
+            onClick={handleOffcanvasShow} // Al hacer clic en el avatar, abre el menú de hamburguesa
+        >
+            {getInitials(userData?.names)}
+        </div>
+    );
 
 
     return (
@@ -70,7 +90,7 @@ const Header = () => {
                             src="/assets/logos/aquasense-logo.png"
                             height="30"
                             className="d-inline-block align-top"
-                            alt="AquaSense Logo"
+                            alt="L"
                         />
                         {' '}AquaSense
                     </Navbar.Brand>
@@ -93,16 +113,7 @@ const Header = () => {
                         {/* Contenedor de Autenticación */}
                         <div className="d-flex align-items-center">
                             {currentUser && userData ? (
-                                <NavDropdown
-                                    title={`Hola, ${userData.names} ${userData.surnames}`}
-                                    id="basic-nav-dropdown"
-                                    align="end"
-                                >
-                                    <NavDropdown.Item href="/data-dashboard">Mi Dashboard</NavDropdown.Item>
-                                    <NavDropdown.Item href="#action/3.2">Configuración</NavDropdown.Item>
-                                    <NavDropdown.Divider />
-                                    <NavDropdown.Item onClick={handleLogout}>Cerrar Sesión</NavDropdown.Item>
-                                </NavDropdown>
+                                <UserAvatar /> // Mostramos el avatar
                             ) : (
                                 <Button variant="outline-primary" onClick={handleShow}>
                                     Soy Cliente
@@ -122,6 +133,14 @@ const Header = () => {
                     </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className="p-0">
+                    {/* Sección de Perfil/Bienvenida */}
+                    {currentUser && userData && (
+                        <div className="p-4 bg-light border-bottom">
+                            <h5 className="mb-0">Hola, {userData.names}!</h5>
+                            <p className="text-muted small">ID: {currentUser.uid.substring(0, 8)}...</p>
+                        </div>
+                    )}
+
                     <ListGroup variant="flush">
                         {allLinks.map((item) => (
                             <ListGroup.Item
@@ -136,6 +155,14 @@ const Header = () => {
                                 {item.label}
                             </ListGroup.Item>
                         ))}
+
+                        {/* Opción de Cerrar Sesión */}
+                        {currentUser && (
+                            <ListGroup.Item action onClick={handleLogout} className="d-flex align-items-center py-3 text-danger">
+                                <i className="bi bi-box-arrow-right me-3 fs-5"></i>
+                                Cerrar Sesión
+                            </ListGroup.Item>
+                        )}
                     </ListGroup>
 
                     <div className="p-4 border-top">
