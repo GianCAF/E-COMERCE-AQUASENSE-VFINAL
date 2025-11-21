@@ -5,6 +5,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './components/Header/Header';
 import HeroProduct from './components/HeroProduct/HeroProduct';
 import ProductDetails from './components/ProductDetails/ProductDetails';
+// Mantenemos los imports aunque ya no se usen en las rutas actuales,
+// ya que podríamos necesitarlos más adelante.
 import SensorDetailsSection from './components/SensorDetailsSection/SensorDetailsSection';
 import MembershipPrograms from './components/MembershipPrograms/MembershipPrograms';
 import { ContactForm } from './components/ContactForm/ContactForm.jsx';
@@ -14,15 +16,16 @@ import Footer from './components/Footer/Footer';
 import CartPage from './components/CartPage/CartPage';
 import PurchaseFlow from './components/PurchaseFlow/PurchaseFlow';
 import RutaMapa from './components/map/RutaMapa.jsx';
-import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
+import MonitoringPage from './pages/MonitoringPage';
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 
 // Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
+// **SECCIÓN AYUDA MODIFICADA:** Se eliminó RutaMapa, SensorDetailsSection y ProblemSolver.
 const HelpPage = () => (
   <>
     <h2 className="text-center my-5 text-primary">Sección de Ayuda y Recursos</h2>
-    {/* Aquí iría la sección de Tips/Guías específicas para control de parámetros */}
+    {/* Contenido de Tips/Guías */}
     <div className="container text-center mb-5">
       <p className="lead text-muted">Aquí irá una sección de Tips/Guías específicas para controlar los parámetros de calidad del agua.</p>
       <div className="border p-4 rounded-3">
@@ -34,17 +37,12 @@ const HelpPage = () => (
         </ul>
       </div>
     </div>
-    <RutaMapa />
+
+    {/* SOLO SE MANTIENEN FAQ Y CONTACT FORM */}
     <FAQ />
     <ContactForm />
-
-    {/* El contenido de 'Técnico' ahora se mueve a la sección de Ayuda/Recursos para que no se pierda */}
-    <SensorDetailsSection />
-    <ProblemSolver />
   </>
 );
-
-// ELIMINAMOS EL COMPONENTE TechnicalPage
 
 // --- VALIDACIÓN DE AUTENTICACIÓN ---
 const AuthWrapper = ({ element }) => {
@@ -57,14 +55,14 @@ const AuthWrapper = ({ element }) => {
 };
 
 // Componente para la página de inicio (Vista "Casa" o Principal)
+// **PÁGINA PRINCIPAL MODIFICADA:** Se eliminó MembershipPrograms.
 const HomePage = () => (
   <>
-    {/* Contenido principal: Carusel, Detalles de Producto, Membresías */}
+    {/* Contenido principal: Carusel, Detalles de Producto, Flujo de Compra */}
     <HeroProduct />
     <ProductDetails />
-    <MembershipPrograms />
+    {/* REMOVIDO: MembershipPrograms */}
     <PurchaseFlow />
-    {/* ELIMINAMOS: ContactForm */}
   </>
 );
 
@@ -77,10 +75,8 @@ function App() {
           {/* 1. RUTA PRINCIPAL (Icono Casa) */}
           <Route path="/" element={<HomePage />} />
 
-          {/* 2. RUTA AYUDA (Icono Pregunta) - Ahora contiene el contenido Técnico */}
+          {/* 2. RUTA AYUDA (Icono Pregunta) */}
           <Route path="/ayuda" element={<HelpPage />} />
-
-          {/* ELIMINAMOS LA RUTA TÉCNICA */}
 
           {/* Otras rutas */}
           <Route path="/cart" element={<CartPage />} />
