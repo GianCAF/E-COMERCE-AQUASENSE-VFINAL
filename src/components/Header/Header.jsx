@@ -14,10 +14,6 @@ const Header = () => {
     const handleShow = () => setShowModal(true);
     const handleAlertClose = () => setShowAlertModal(false);
 
-    // Determina si estamos en la página principal para ocultar el botón de Home
-    // La página principal es aquella con la ruta exacta "/"
-    const isHomePage = location.pathname === '/';
-
     // Efecto para verificar si se requiere mostrar el prompt de login
     useEffect(() => {
         if (location.state && location.state.showLoginPrompt && !currentUser) {
@@ -40,45 +36,13 @@ const Header = () => {
         handleShow();
     };
 
-    // --- COMPONENTE FLOTANTE DE INICIO ---
-    // Renderizado dentro del Header para que siempre esté activo
-    const FloatingHomeButton = () => (
-        // El botón solo se muestra si NO estamos en la página principal
-        !isHomePage && (
-            <Link
-                to="/"
-                style={{
-                    position: 'fixed',
-                    // Posicionado a la izquierda del carrito, ajusta el valor 'right' si es necesario.
-                    // Asumimos que el carrito está en right: '2rem'
-                    right: '85px',
-                    bottom: '2rem',
-                    zIndex: 1050,
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    borderRadius: '50%',
-                    width: '60px',
-                    height: '60px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                    cursor: 'pointer',
-                    textDecoration: 'none',
-                }}
-            >
-                <i className="bi bi-house-fill" style={{ fontSize: '1.8rem' }}></i>
-            </Link>
-        )
-    );
-    // --- FIN COMPONENTE FLOTANTE DE INICIO ---
 
     return (
         <>
             {/* Navbar (Encabezado principal) */}
             <Navbar bg="light" expand="lg" className="shadow-sm sticky-top">
                 <Container>
-                    {/* El Brand ya te lleva al ancla #home, pero usaremos Link para asegurar el cambio de ruta */}
+                    {/* Brand ahora siempre regresa a la raíz */}
                     <Navbar.Brand as={Link} to="/">
                         <img
                             src="/assets/logos/aquasense-logo.png"
@@ -90,24 +54,16 @@ const Header = () => {
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
+                        {/* Navegación superior con enlaces a las nuevas secciones */}
                         <Nav className="mx-auto">
-                            {/* Los enlaces de navegación deben usar el prefijo /# para funcionar si estás en otra ruta, 
-                                o ser Links simples si apuntas a otra ruta principal. Los mantendremos como anclas por ahora */}
-                            <Nav.Link href="/#product-info">Producto</Nav.Link>
-                            <Nav.Link href="/#sensors">Sensores</Nav.Link>
-                            <Nav.Link href="/#purchase-flow">Membresías</Nav.Link>
-                            <Nav.Link href="/#faq">FAQ</Nav.Link>
+                            <Nav.Link as={Link} to="/ayuda">Ayuda</Nav.Link>
+                            <Nav.Link as={Link} to="/tecnico">Detalles Técnicos</Nav.Link>
+                            <Nav.Link as={Link} to="/monitoreo">Monitoreo</Nav.Link>
                         </Nav>
 
                         {/* Contenedor para los botones de utilidad y autenticación */}
                         <div className="d-flex align-items-center">
-                            <Link
-                                to="/monitoreo"
-                                className="btn btn-outline-info me-3"
-                                style={{ whiteSpace: 'nowrap' }}
-                            >
-                                Monitoreo
-                            </Link>
+                            {/* EL BOTÓN DE MONITOREO SUPERIOR FUE ELIMINADO */}
 
                             {/* Lógica condicional del botón Soy Cliente/Usuario */}
                             {currentUser && userData ? (
@@ -132,29 +88,10 @@ const Header = () => {
                 </Container>
             </Navbar>
 
-            {/* INYECTAMOS EL BOTÓN FLOTANTE */}
-            <FloatingHomeButton />
-
             {/* El Modal de Login real */}
             <AuthModal show={showModal} handleClose={handleClose} />
 
-            {/* Modal de Alerta de Acceso Requerido */}
-            <Modal show={showAlertModal} onHide={handleAlertClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title className="text-danger">Acceso Restringido</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p className="lead">Debes iniciar sesión para acceder al Dashboard de Monitoreo en Tiempo Real.</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleAlertClose}>
-                        Cerrar
-                    </Button>
-                    <Button variant="primary" onClick={handleLoginClick}>
-                        Iniciar Sesión
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {/* NOTA: EL MODAL DE ALERTA DE ACCESO FUE MOVIDO AL BottomNavBar.jsx */}
         </>
     );
 };

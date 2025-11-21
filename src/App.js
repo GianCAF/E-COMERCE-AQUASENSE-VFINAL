@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'; // Necesitamos useEffect para el RouteChangeTracker
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -11,60 +11,66 @@ import { ContactForm } from './components/ContactForm/ContactForm.jsx';
 import ProblemSolver from './components/ProblemSolver/ProblemSolver';
 import FAQ from './components/FAQ/FAQ';
 import Footer from './components/Footer/Footer';
-import FloatingCart from './components/FloatingCart/FloatingCart';
 import CartPage from './components/CartPage/CartPage';
 import PurchaseFlow from './components/PurchaseFlow/PurchaseFlow';
 import RutaMapa from './components/map/RutaMapa.jsx';
-// Importación corregida a /pages/MonitoringPage para consistencia
+// Asegúrate de que esta ruta sea correcta: si MonitoringPage está en /pages/, ajusta
 import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
+import BottomNavBar from './components/BottomNavBar/BottomNavBar'; // Importamos la nueva barra
 
-// --- SEGUIMIENTO DE GOOGLE TAG MANAGER (GTM) ---
-const RouteChangeTracker = () => {
-  const location = useLocation();
-  // Usamos GTM, que maneja el dataLayer global.
-  const gtmId = process.env.REACT_APP_GTM_CONTAINER_ID;
+// --- ELIMINACIÓN DEL RASTREADOR DE RUTAS GTM (RouteChangeTracker) ---
+// Se eliminó la dependencia a useLocation y useEffect innecesaria aquí.
 
-  useEffect(() => {
-    // Verificar si el dataLayer está inicializado y si tenemos el ID de GTM
-    if (window.dataLayer && gtmId) {
-      // Usamos dataLayer.push para enviar el evento de cambio de página (pageview virtual)
-      window.dataLayer.push({
-        event: 'page_view',
-        page_path: location.pathname + location.search,
-        page_title: document.title,
-        gtm_id: gtmId // Aunque GTM ya sabe su ID, es buena práctica pasarlo
-      });
-      // console.log("GTM Evento: page_view", location.pathname); // Para depuración
-    }
-  }, [location, gtmId]); // Se ejecuta cada vez que 'location' cambia
+// Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
+const HelpPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Sección de Ayuda y Recursos</h2>
+    {/* Aquí iría la sección de Tips/Guías específicas para control de parámetros */}
+    <div className="container text-center mb-5">
+      <p className="lead text-muted">Aquí irá una sección de Tips/Guías específicas para controlar los parámetros de calidad del agua.</p>
+      <div className="border p-4 rounded-3">
+        <h4>Tips Rápidos:</h4>
+        <ul>
+          <li>Para subir el pH: Añadir bicarbonato de sodio.</li>
+          <li>Para bajar el pH: Añadir vinagre o ácido cítrico.</li>
+          <li>La turbidez debe estar por debajo de 5 NTU para ser agua potable.</li>
+        </ul>
+      </div>
+    </div>
+    <RutaMapa />
+    <FAQ />
+    <ContactForm />
+  </>
+);
 
-  return null;
-};
+// Componente para la nueva sección Técnica/Solución (Icono Herramienta)
+const TechnicalPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Detalles Técnicos y Solución de Problemas</h2>
+    <SensorDetailsSection />
+    <ProblemSolver />
+  </>
+);
+
 
 // --- VALIDACIÓN DE AUTENTICACIÓN ---
 const AuthWrapper = ({ element }) => {
   const { currentUser } = useAuth();
 
-  // Si el usuario NO está logeado, redirige al home con un estado que indica abrir el modal.
   if (!currentUser) {
     return <Navigate to="/" replace state={{ showLoginPrompt: true }} />;
   }
-
-  // Si el usuario SÍ está logeado, permite el acceso al componente.
   return element;
 };
 
-// Componente para la página de inicio que agrupa las secciones
+// Componente para la página de inicio (Vista "Casa" o Principal)
 const HomePage = () => (
   <>
     <HeroProduct />
     <ProductDetails />
-    <SensorDetailsSection />
+    <MembershipPrograms />
     <PurchaseFlow />
-    <ProblemSolver />
-    <RutaMapa />
-    <FAQ />
     <ContactForm />
   </>
 );
@@ -72,14 +78,19 @@ const HomePage = () => (
 function App() {
   return (
     <Router>
-      {/* El rastreador de rutas debe ir dentro del Router */}
-      <RouteChangeTracker />
       <Header />
-      <main>
+      <main style={{ paddingBottom: '70px' }}> {/* Añadimos padding para que el BottomNav no tape el contenido */}
         <Routes>
-          {/* Rutas Públicas */}
+          {/* 1. RUTA PRINCIPAL (Icono Casa) */}
           <Route path="/" element={<HomePage />} />
-          <Route path="/product-details" element={<ProductDetails />} />
+
+          {/* 2. RUTA AYUDA (Icono Pregunta) */}
+          <Route path="/ayuda" element={<HelpPage />} />
+
+          {/* 3. RUTA TÉCNICA (Icono Herramienta) */}
+          <Route path="/tecnico" element={<TechnicalPage />} />
+
+          {/* Otras rutas */}
           <Route path="/cart" element={<CartPage />} />
 
           {/* Ruta Protegida para Monitoreo */}
@@ -90,8 +101,8 @@ function App() {
 
         </Routes>
       </main>
-      <FloatingCart />
       <Footer />
+      <BottomNavBar /> {/* Barra de navegación fija inferior */}
     </Router>
   );
 }
