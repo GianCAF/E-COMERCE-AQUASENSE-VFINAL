@@ -5,8 +5,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './components/Header/Header';
 import HeroProduct from './components/HeroProduct/HeroProduct';
 import ProductDetails from './components/ProductDetails/ProductDetails';
-// Mantenemos los imports aunque ya no se usen en las rutas actuales,
-// ya que podríamos necesitarlos más adelante.
+// Importamos solo por si los necesitamos más adelante, pero no se usan en las rutas actuales.
 import SensorDetailsSection from './components/SensorDetailsSection/SensorDetailsSection';
 import MembershipPrograms from './components/MembershipPrograms/MembershipPrograms';
 import { ContactForm } from './components/ContactForm/ContactForm.jsx';
@@ -21,7 +20,7 @@ import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 
 // Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
-// **SECCIÓN AYUDA MODIFICADA:** Se eliminó RutaMapa, SensorDetailsSection y ProblemSolver.
+// **SECCIÓN AYUDA MODIFICADA:** SOLO MUESTRA TIPS, FAQ y CONTACTO
 const HelpPage = () => (
   <>
     <h2 className="text-center my-5 text-primary">Sección de Ayuda y Recursos</h2>
@@ -38,9 +37,14 @@ const HelpPage = () => (
       </div>
     </div>
 
-    {/* SOLO SE MANTIENEN FAQ Y CONTACT FORM */}
+    {/* Elementos que permanecen en ayuda */}
     <FAQ />
     <ContactForm />
+
+    {/* ELEMENTOS REMOVIDOS DE LA RUTA /AYUDA: */}
+    {/* <RutaMapa /> */}
+    {/* <SensorDetailsSection /> */}
+    {/* <ProblemSolver /> */}
   </>
 );
 
@@ -49,18 +53,24 @@ const AuthWrapper = ({ element }) => {
   const { currentUser } = useAuth();
 
   if (!currentUser) {
+    // Redirige a la página principal y muestra un prompt de login
     return <Navigate to="/" replace state={{ showLoginPrompt: true }} />;
   }
   return element;
 };
 
 // Componente para la página de inicio (Vista "Casa" o Principal)
-// **PÁGINA PRINCIPAL MODIFICADA:** Se eliminó MembershipPrograms.
+// **PÁGINA PRINCIPAL MODIFICADA:** SE REMOVIERON LAS MEMBRESÍAS.
 const HomePage = () => (
   <>
-    {/* Contenido principal: Carusel, Detalles de Producto, Flujo de Compra */}
+    {/* Contenido principal: Carusel y Detalles de Producto */}
     <HeroProduct />
     <ProductDetails />
+
+    {/* ¡REMOVIDO! Ya no se muestran los programas de membresía */}
+    {/* <MembershipPrograms /> */}
+
+    {/* Flujo de Compra */}
     <PurchaseFlow />
   </>
 );
