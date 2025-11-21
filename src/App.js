@@ -5,8 +5,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Header from './components/Header/Header';
 import HeroProduct from './components/HeroProduct/HeroProduct';
 import ProductDetails from './components/ProductDetails/ProductDetails';
-// Mantenemos los imports aunque ya no se usen en las rutas actuales,
-// ya que podríamos necesitarlos más adelante.
 import SensorDetailsSection from './components/SensorDetailsSection/SensorDetailsSection';
 import MembershipPrograms from './components/MembershipPrograms/MembershipPrograms';
 import { ContactForm } from './components/ContactForm/ContactForm.jsx';
@@ -20,8 +18,37 @@ import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 
+// --- RUTAS MODULARES PARA EL MENÚ DE HAMBURGUESA ---
+
+const SensorDetailPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Detalles Técnicos y Sensores</h2>
+    <SensorDetailsSection />
+  </>
+);
+
+const MembershipPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Programas de Membresía</h2>
+    <MembershipPrograms />
+  </>
+);
+
+const ProblemSolverPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Cómo AquaSense Resuelve Problemas</h2>
+    <ProblemSolver />
+  </>
+);
+
+const MapPage = () => (
+  <>
+    <h2 className="text-center my-5 text-primary">Ubicación y Rutas</h2>
+    <RutaMapa />
+  </>
+);
+
 // Componente para la nueva sección de Tips/Ayuda (Icono Pregunta)
-// **SECCIÓN AYUDA MODIFICADA:** SOLO MUESTRA TIPS, FAQ y CONTACTO
 const HelpPage = () => (
   <>
     <h2 className="text-center my-5 text-primary">Sección de Ayuda y Recursos</h2>
@@ -56,17 +83,11 @@ const AuthWrapper = ({ element }) => {
 };
 
 // Componente para la página de inicio (Vista "Casa" o Principal)
-// **PÁGINA PRINCIPAL MODIFICADA:** SE REMUEVE DEFINITIVAMENTE MembershipPrograms.
 const HomePage = () => (
   <>
     {/* Contenido principal: Carusel y Detalles de Producto */}
     <HeroProduct />
     <ProductDetails />
-
-    {/* ¡REMOVIDO! MembershipPrograms ya NO se renderiza aquí */}
-    {/* <MembershipPrograms /> */}
-
-    {/* Flujo de Compra */}
     <PurchaseFlow />
   </>
 );
@@ -82,6 +103,12 @@ function App() {
 
           {/* 2. RUTA AYUDA (Icono Pregunta) */}
           <Route path="/ayuda" element={<HelpPage />} />
+
+          {/* RUTAS DEL MENÚ DE HAMBURGUESA (Acceso Total) */}
+          <Route path="/sensores" element={<SensorDetailPage />} />
+          <Route path="/membresias" element={<MembershipPage />} />
+          <Route path="/problemas" element={<ProblemSolverPage />} />
+          <Route path="/mapa" element={<MapPage />} />
 
           {/* Otras rutas */}
           <Route path="/cart" element={<CartPage />} />
