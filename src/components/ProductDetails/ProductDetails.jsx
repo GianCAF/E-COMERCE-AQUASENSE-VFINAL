@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse, Alert } from 'react-bootstrap';
 import { useCart } from '../../context/CartContext';
 // Importa la imagen que ya te funciona
 import imagen1 from '../../imgcar/imagen1.jpg'; //producto
@@ -9,14 +9,15 @@ import imagen4 from '../../imgcar/img4.jpg';
 import visa from '../../imgcar/visa.png';
 import master from '../../imgcar/mastercad.png';
 
-// Importamos el componente de Reseñas que carga datos de Firebase
+// --- IMPORTAMOS EL COMPONENTE DE RESEÑAS DINÁMICAS ---
 import ReviewsSection from '../ReviewsSection';
-// NOTA: Asegúrate de que la ruta de importación para ReviewsSection sea correcta.
-
+// NOTA: Asegúrate de que esta ruta '../ReviewsSection' sea correcta para tu proyecto.
 
 const ProductDetails = () => {
     const { addToCart } = useCart();
 
+    // NOTA: Mantenemos rating y reviewsCount estáticos aquí
+    // ya que el cálculo real se hace dentro del componente ReviewsSection.
     const productData = {
         // Es crucial que el producto tenga un 'id' único
         id: 'aquasense-monitor-123',
@@ -27,8 +28,8 @@ const ProductDetails = () => {
         stock: 25,
         seller: 'AquaSense Oficial',
         sellerLink: '#',
-        rating: 4.5, // Mantener para mostrar estrellas
-        reviewsCount: 37, // Mantener para mostrar conteo
+        rating: 4.5, // Mantener para UI
+        reviewsCount: 37, // Mantener para UI
         description: `El AquaSense es la solución definitiva para el monitoreo de la calidad del agua. Con un diseño robusto y sensores de alta precisión (pH, Turbidez, Conductividad), te permite tener control total sobre tu fuente de agua en tiempo real.`,
         longDescription: `El AquaSense no solo mide, sino que predice. Utiliza algoritmos de IA para analizar las tendencias de los datos y alertarte antes de que un problema de calidad del agua se vuelva crítico. Incluye una batería de iones de litio de 3000mAh que dura hasta 6 meses con una sola carga. Ideal para monitoreo remoto en estanques, acuarios industriales o pozos profundos.`,
         features: [
@@ -46,7 +47,7 @@ const ProductDetails = () => {
             { label: 'Batería', value: 'Ion-Litio 3000mAh' },
             { label: 'Dimensiones', value: '15cm x 10cm x 5cm' },
         ],
-        // Eliminamos el array 'reviews' estático
+        // ELIMINAMOS EL ARRAY ESTÁTICO DE RESEÑAS
     };
 
     const [mainImage, setMainImage] = useState(imagen1);
@@ -76,8 +77,9 @@ const ProductDetails = () => {
     return (
         <Container className="my-5" id="product-info">
             <Row>
-                {/* Columna de Imágenes (Se mantiene igual) */}
+                {/* Columna de Imágenes */}
                 <Col md={5}>
+                    {/* Contenedor principal de la imagen: Fija la altura a 400px */}
                     <div
                         className="position-relative mb-3 d-flex justify-content-center align-items-center border shadow-sm rounded-4"
                         style={{ height: '400px', overflow: 'hidden' }}
@@ -140,7 +142,7 @@ const ProductDetails = () => {
                     <hr />
                 </Col>
 
-                {/* Columna de Opciones de Compra (Se mantiene igual) */}
+                {/* Columna de Opciones de Compra */}
                 <Col md={3}>
                     <Card className="shadow-sm rounded-4">
                         <Card.Body>
@@ -193,7 +195,7 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- SECCIONES COLAPSABLES (Se mantienen igual) --- */}
+            {/* --- SECCIONES COLAPSABLES --- */}
 
             {/* 1. Características Detalladas (Especificaciones) */}
             <Row className="mt-5">
@@ -230,11 +232,10 @@ const ProductDetails = () => {
                         onClick={() => setOpenDescription(!openDescription)}
                         aria-controls="description-collapse"
                         aria-expanded={openDescription}
-                        className="mb-3 text-primary cursor-pointer hover-underline"
+                        className="mb-3 text-primary"
                         style={{ cursor: 'pointer' }}
                     >
-                        Descripción del Producto
-                        <i className={`bi ms-2 bi-chevron-${openDescription ? 'up' : 'down'}`}></i>
+                        Descripción del Producto <i className={`bi ms-2 bi-chevron-${openDescription ? 'up' : 'down'}`}></i>
                     </h3>
                     <Collapse in={openDescription}>
                         <div id="description-collapse" className="border p-3 rounded-3 bg-light">
@@ -246,15 +247,14 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- SECCIÓN DE RESEÑAS DINÁMICAS (REEMPLAZO) --- */}
-            <Row>
+            {/* --- Opiniones del Producto (Dinámicas) --- */}
+            <Row className="mt-4">
                 <Col md={12}>
-                    {/* Llamamos al componente ReviewsSection que carga datos de Firebase */}
-                    <ReviewsSection />
+                    {/* Insertamos el componente que ya hace la carga y el formulario */}
+                    <ReviewsSection productId={productData.id} />
+                    <hr />
                 </Col>
             </Row>
-
-
         </Container>
     );
 };
