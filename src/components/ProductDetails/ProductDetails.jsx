@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse } from 'react-bootstrap'; // Importamos Collapse
+import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse, Spinner } from 'react-bootstrap';
 import { useCart } from '../../context/CartContext';
 // Importa la imagen que ya te funciona
 import imagen1 from '../../imgcar/imagen1.jpg'; //producto
@@ -8,6 +8,11 @@ import imagen3 from '../../imgcar/img3.jpg';
 import imagen4 from '../../imgcar/img4.jpg';
 import visa from '../../imgcar/visa.png';
 import master from '../../imgcar/mastercad.png';
+
+// Importamos el componente de Reseñas que carga datos de Firebase
+import ReviewsSection from '../ReviewsSection';
+// NOTA: Asegúrate de que la ruta de importación para ReviewsSection sea correcta.
+
 
 const ProductDetails = () => {
     const { addToCart } = useCart();
@@ -22,8 +27,8 @@ const ProductDetails = () => {
         stock: 25,
         seller: 'AquaSense Oficial',
         sellerLink: '#',
-        rating: 4.5, // Valor de ejemplo
-        reviewsCount: 37, // Valor de ejemplo
+        rating: 4.5, // Mantener para mostrar estrellas
+        reviewsCount: 37, // Mantener para mostrar conteo
         description: `El AquaSense es la solución definitiva para el monitoreo de la calidad del agua. Con un diseño robusto y sensores de alta precisión (pH, Turbidez, Conductividad), te permite tener control total sobre tu fuente de agua en tiempo real.`,
         longDescription: `El AquaSense no solo mide, sino que predice. Utiliza algoritmos de IA para analizar las tendencias de los datos y alertarte antes de que un problema de calidad del agua se vuelva crítico. Incluye una batería de iones de litio de 3000mAh que dura hasta 6 meses con una sola carga. Ideal para monitoreo remoto en estanques, acuarios industriales o pozos profundos.`,
         features: [
@@ -41,15 +46,12 @@ const ProductDetails = () => {
             { label: 'Batería', value: 'Ion-Litio 3000mAh' },
             { label: 'Dimensiones', value: '15cm x 10cm x 5cm' },
         ],
-        reviews: [
-            { author: 'Juan P.', rating: 5, comment: '¡Excelente producto! Muy fácil de usar y la precisión es increíble. Ahora sé exactamente qué pasa con mi agua.', date: '2023-10-26' },
-            { author: 'Maria G.', rating: 4, comment: 'Funciona muy bien, aunque la app podría mejorar en diseño. Aun así, cumple su función perfectamente.', date: '2023-10-20' },
-        ]
+        // Eliminamos el array 'reviews' estático
     };
 
     const [mainImage, setMainImage] = useState(imagen1);
-    const [openSpecs, setOpenSpecs] = useState(false); // Nuevo estado para especificaciones
-    const [openDescription, setOpenDescription] = useState(false); // Nuevo estado para descripción
+    const [openSpecs, setOpenSpecs] = useState(false);
+    const [openDescription, setOpenDescription] = useState(false);
     const productImages = [
         { src: imagen1 },
         { src: imagen2 },
@@ -68,16 +70,14 @@ const ProductDetails = () => {
 
     const handleAddToCart = () => {
         addToCart(productData);
-        // Usamos console.log en lugar de alert
         console.log(`${productData.name} ha sido agregado al carrito.`);
     };
 
     return (
         <Container className="my-5" id="product-info">
             <Row>
-                {/* Columna de Imágenes */}
+                {/* Columna de Imágenes (Se mantiene igual) */}
                 <Col md={5}>
-                    {/* Contenedor principal de la imagen: Fija la altura a 400px */}
                     <div
                         className="position-relative mb-3 d-flex justify-content-center align-items-center border shadow-sm rounded-4"
                         style={{ height: '400px', overflow: 'hidden' }}
@@ -140,7 +140,7 @@ const ProductDetails = () => {
                     <hr />
                 </Col>
 
-                {/* Columna de Opciones de Compra */}
+                {/* Columna de Opciones de Compra (Se mantiene igual) */}
                 <Col md={3}>
                     <Card className="shadow-sm rounded-4">
                         <Card.Body>
@@ -193,7 +193,7 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- SECCIONES COLAPSABLES --- */}
+            {/* --- SECCIONES COLAPSABLES (Se mantienen igual) --- */}
 
             {/* 1. Características Detalladas (Especificaciones) */}
             <Row className="mt-5">
@@ -246,41 +246,15 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- FIN SECCIONES COLAPSABLES --- */}
-
-            {/* Opiniones del Producto (se mantiene visible) */}
-            <Row className="mt-4">
+            {/* --- SECCIÓN DE RESEÑAS DINÁMICAS (REEMPLAZO) --- */}
+            <Row>
                 <Col md={12}>
-                    <h3 className="mb-3">Opiniones del producto</h3>
-                    <div className="d-flex align-items-center mb-3">
-                        <h4 className="me-2">{productData.rating}</h4>
-                        <div className="text-warning">
-                            {'★'.repeat(Math.floor(productData.rating))}
-                            {'☆'.repeat(5 - Math.floor(productData.rating))}
-                        </div>
-                        <span className="ms-2">({productData.reviewsCount} calificaciones)</span>
-                    </div>
-
-                    <h5 className="mt-4">Opiniones destacadas</h5>
-                    {productData.reviews.map((review, index) => (
-                        <Card key={index} className="mb-3 shadow-sm rounded-3">
-                            <Card.Body>
-                                <div className="d-flex justify-content-between">
-                                    <h6 className="mb-1">{review.author}</h6>
-                                    <small className="text-muted">{review.date}</small>
-                                </div>
-                                <div className="text-warning mb-2">
-                                    {'★'.repeat(review.rating)}
-                                    {'☆'.repeat(5 - review.rating)}
-                                </div>
-                                <Card.Text>{review.comment}</Card.Text>
-                            </Card.Body>
-                        </Card>
-                    ))}
-                    <Button variant="outline-secondary">Ver todas las opiniones</Button>
-                    <hr />
+                    {/* Llamamos al componente ReviewsSection que carga datos de Firebase */}
+                    <ReviewsSection />
                 </Col>
             </Row>
+
+
         </Container>
     );
 };
