@@ -14,9 +14,11 @@ import Footer from './components/Footer/Footer';
 import CartPage from './components/CartPage/CartPage';
 import PurchaseFlow from './components/PurchaseFlow/PurchaseFlow';
 import RutaMapa from './components/map/RutaMapa.jsx';
-import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
+import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx'; 
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
+import MarketAnalysisPage from './components/MarketAnalysisPage/MarketAnalysisPage.jsx'; 
+
 import { Container, Card, Image, Button, Form, Alert } from 'react-bootstrap'; // Importaciones para la página de Perfil
 
 
@@ -50,7 +52,7 @@ const MapPage = () => (
   </>
 );
 
-// Componente para la nueva sección de Perfil (donde puede cambiar la imagen)
+// Componente para la nueva sección de Perfil
 const ProfilePage = () => {
   const { currentUser, userData } = useAuth();
   const [imageFile, setImageFile] = useState(null);
@@ -76,8 +78,7 @@ const ProfilePage = () => {
       setStatus('Subiendo imagen... (Simulación)');
       setTimeout(() => {
         setStatus('✅ ¡Imagen de perfil actualizada con éxito!');
-        // Aquí se llamaría a una función en el contexto de auth para actualizar la imagen
-        setImageFile(null); // Limpiar archivo después de "subir"
+        setImageFile(null);
       }, 1500);
     } else {
       setStatus('Seleccione un archivo de imagen primero.');
@@ -99,7 +100,6 @@ const ProfilePage = () => {
               className="mx-auto border border-secondary text-white bg-primary rounded-circle mb-3"
               style={{ width: '100px', height: '100px', fontSize: '3rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
-              {/* Si tu userData tuviera una fotoURL, la usarías aquí: <Image src={userData.photoURL} roundedCircle fluid /> */}
               {getInitials(userData.names)}
             </div>
             <h4>{userData.names} {userData.surnames}</h4>
@@ -184,13 +184,16 @@ function App() {
           {/* 2. RUTA AYUDA (Icono Pregunta) */}
           <Route path="/ayuda" element={<HelpPage />} />
 
+          {/* 3. RUTA ANÁLISIS DE MERCADO (Nueva ruta para las gráficas) */}
+          <Route path="/mercado" element={<MarketAnalysisPage />} />
+
           {/* RUTAS DEL MENÚ DE HAMBURGUESA (Acceso Total) */}
           <Route path="/sensores" element={<SensorDetailPage />} />
           <Route path="/membresias" element={<MembershipPage />} />
           <Route path="/problemas" element={<ProblemSolverPage />} />
           <Route path="/mapa" element={<MapPage />} />
 
-          {/* RUTA DE PERFIL (Protegida solo si es estrictamente necesario, sino, el componente maneja el estado) */}
+          {/* RUTA DE PERFIL (Protegida) */}
           <Route
             path="/perfil"
             element={<AuthWrapper element={<ProfilePage />} />}

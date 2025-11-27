@@ -51,10 +51,13 @@ const Header = () => {
         { path: '/ayuda', label: 'Ayuda y Recursos', icon: 'bi-question-circle' },
         { path: '/monitoreo', label: 'Dashboard de Monitoreo', icon: 'bi-graph-up' },
 
-        // --- NUEVA SECCIÓN: PERFIL ---
+        // --- NUEVA SECCIÓN AGREGADA: ANÁLISIS DE MERCADO ---
+        { path: '/mercado', label: 'Análisis y Mercado (Hidalgo)', icon: 'bi-bar-chart-line' },
+
+        // --- PERFIL ---
         { path: '/perfil', label: 'Mi Perfil', icon: 'bi-person-circle' },
 
-        // --- SECCIONES OCULTAS ---
+        // --- SECCIONES OCULTAS/COMPLEMENTARIAS ---
         { path: '/sensores', label: 'Detalles Técnicos y Sensores', icon: 'bi-cpu' },
         { path: '/membresias', label: 'Programas de Membresía', icon: 'bi-gem' },
         { path: '/problemas', label: 'Cómo Resolvemos Problemas', icon: 'bi-tools' },
@@ -90,7 +93,7 @@ const Header = () => {
                             src="/assets/logos/aquasense-logo.png"
                             height="30"
                             className="d-inline-block align-top"
-                            alt="L"
+                            alt="AquaSense Logo"
                         />
                         {' '}AquaSense
                     </Navbar.Brand>
