@@ -6,9 +6,9 @@ import { Container, Row, Col, Card, Image, ListGroup } from 'react-bootstrap';
 // -----------------------------------------------------------
 // NOTA: Debes reemplazar estas rutas relativas por las correctas si tus archivos
 // no están en la misma ubicación que las imágenes de los sensores.
-import MapaCalor from '../assets/mapa-calor-hidalgo.jpg';       // Asume que tienes este archivo
-import GraficaPastel from '../assets/grafica-pastel-agua.jpg'; // Asume que tienes este archivo
-import DashboardCombinado from '../assets/dashboard-combinado.jpg'; // Asume que tienes este archivo
+import MapaCalor from '../../../public/assets/mapadecalor.jpg';       // 
+import GraficaPastel from '../../../public/assets/graficapastel.jpg'; 
+import DashboardCombinado from '../../../public/assets/dashboardIntegrador.jpg'; 
 // -----------------------------------------------------------
 
 const MarketAnalysisPage = () => {
