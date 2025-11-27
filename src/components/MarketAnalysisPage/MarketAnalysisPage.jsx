@@ -2,13 +2,13 @@ import React from 'react';
 import { Container, Row, Col, Card, Image, ListGroup } from 'react-bootstrap';
 
 // -----------------------------------------------------------
-// 1. IMPORTAR LAS IMÁGENES COMO MÓDULOS (Método Funcional)
+// 1. IMPORTAR LAS IMÁGENES COMO MÓDULOS (Rutas Corregidas)
 // -----------------------------------------------------------
-// NOTA: Debes reemplazar estas rutas relativas por las correctas si tus archivos
-// no están en la misma ubicación que las imágenes de los sensores.
-import MapaCalor from '../../../src/assets/sensor-ph.png';       // 
-import GraficaPastel from '../../../src/assets/sensor-ph.png'; 
-import DashboardCombinado from '../../../src/assets/sensor-ph.png'; 
+// NOTA: Ajustamos la ruta para que coincida con la profundidad de los sensores.
+// Asegúrate de que los nombres de archivo sean correctos en tu carpeta /assets.
+import MapaCalor from '../../../src/assets/mapadecalor.jpg';
+import GraficaPastel from '../../../src/assets/graficapastel.jpg';
+import DashboardCombinado from '../../../src/assets/dashboardIntegrador.jpg';
 // -----------------------------------------------------------
 
 const MarketAnalysisPage = () => {
