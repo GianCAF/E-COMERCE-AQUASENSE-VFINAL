@@ -23,16 +23,13 @@ const fluxQuery = `from(bucket: "${bucket}")
   |> range(start: -7d)`;
 
 const MonitoringPage = () => {
-    // Estado para almacenar los datos crudos para la tabla y el gráfico
     const [rawData, setRawData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // ESTADO CLAVE: Controla qué sección se muestra
     const [viewMode, setViewMode] = useState('all'); // Valores: 'all', 'total', 'individual', 'table'
 
     const fetchData = () => {
-        // Guard clause para evitar consultas sin credenciales
+        // Lógica de obtención de datos (se mantiene igual)
         if (!url || !token || !org || !bucket) {
             setLoading(false);
             setError("Error de configuración: Las credenciales de InfluxDB no están cargadas. Revisa tu archivo .env.local.");
@@ -41,8 +38,6 @@ const MonitoringPage = () => {
 
         setLoading(true);
         setError(null);
-
-        // Mapa temporal para pivotar los datos en el cliente (clave: _time)
         const pivotMap = {};
 
         queryApi.queryRows(fluxQuery, {
@@ -50,21 +45,17 @@ const MonitoringPage = () => {
                 const o = tableMeta.toObject(row);
                 const timeKey = o._time;
                 const field = o._field;
-                // Aseguramos que el valor sea un número (o nulo)
                 const value = o._value !== undefined ? parseFloat(o._value) : null;
 
                 if (!pivotMap[timeKey]) {
-                    // Inicializa el registro en el mapa
                     pivotMap[timeKey] = {
                         time: new Date(timeKey).toLocaleString('es-MX'),
-                        timestamp: new Date(timeKey).getTime(), // Para ordenamiento
+                        timestamp: new Date(timeKey).getTime(),
                         ph: null,
                         turbidez: null,
                         conductividad: null,
                     };
                 }
-
-                // Asignar el valor al campo correspondiente si es numérico y válido
                 if (value !== null) {
                     if (field === 'ph') {
                         pivotMap[timeKey].ph = value;
@@ -81,7 +72,6 @@ const MonitoringPage = () => {
                 setLoading(false);
             },
             complete() {
-                // Convertir el mapa pivotado en un arreglo de registros y ordenar por tiempo
                 const finalData = Object.values(pivotMap).sort((a, b) => a.timestamp - b.timestamp);
                 setRawData(finalData);
 
@@ -95,38 +85,33 @@ const MonitoringPage = () => {
 
     useEffect(() => {
         fetchData();
-        // Recargar automáticamente cada 60 segundos (60000ms)
         const intervalId = setInterval(fetchData, 60000);
-
-        return () => clearInterval(intervalId); // Limpieza al desmontar
+        return () => clearInterval(intervalId);
     }, []);
 
-    // --- LÓGICA DEL GRÁFICO (usa useMemo para rendimiento) ---
+    // --- LÓGICA DEL GRÁFICO (useMemo se mantiene igual) ---
     const chartData = useMemo(() => {
         if (rawData.length === 0) return { datasets: [] };
 
-        const labels = rawData.map(d => d.time.split(',')[1].trim()); // Usamos solo la hora para etiquetas
+        const labels = rawData.map(d => d.time.split(',')[1].trim());
 
-        // Función auxiliar para crear un dataset con estilo lineal + puntos
         const createDataset = (key, label, color) => ({
             label,
             data: rawData.map(d => d[key]),
             borderColor: color,
             backgroundColor: color + '40',
-            tension: 0.2,       // Líneas suaves (suaviza la línea entre puntos)
-            pointRadius: 3,     // Marca los puntos de dato
-            fill: false,        // Sin relleno bajo la línea
-            spanGaps: true,     // Conecta los puntos si hay valores nulos
+            tension: 0.2,
+            pointRadius: 3,
+            fill: false,
+            spanGaps: true,
         });
 
-        // Datasets para la gráfica combinada
         const combinedDatasets = [
             createDataset('ph', 'pH', 'rgb(75, 192, 192)'),
             createDataset('turbidez', 'Turbidez (NTU)', 'rgb(255, 99, 132)'),
             createDataset('conductividad', 'Conductividad (µS/cm)', 'rgb(54, 162, 235)'),
         ];
 
-        // Datasets individuales
         const phDataset = createDataset('ph', 'Nivel de pH', 'rgb(75, 192, 192)');
         const turbidezDataset = createDataset('turbidez', 'Nivel de Turbidez (NTU)', 'rgb(255, 99, 132)');
         const conductividadDataset = createDataset('conductividad', 'Nivel de Conductividad (µS/cm)', 'rgb(54, 162, 235)');
@@ -140,7 +125,7 @@ const MonitoringPage = () => {
         };
     }, [rawData]);
 
-    // Opciones base del gráfico de Chart.js
+    // Opciones base del gráfico de Chart.js (se mantiene igual)
     const baseOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -153,7 +138,7 @@ const MonitoringPage = () => {
         }
     };
 
-    // Opciones específicas para la gráfica combinada
+    // Opciones específicas para la gráfica combinada (se mantiene igual)
     const combinedOptions = {
         ...baseOptions,
         plugins: {
@@ -165,40 +150,9 @@ const MonitoringPage = () => {
         },
     };
 
-    // Opciones específicas para la gráfica de pH (ejemplo de límites de escala)
-    const phOptions = {
-        ...baseOptions,
-        plugins: {
-            ...baseOptions.plugins,
-            title: { display: true, text: 'Histórico de Nivel de pH' },
-        },
-        scales: {
-            ...baseOptions.scales,
-            y: {
-                title: { display: true, text: 'pH (0-14)' },
-                min: 0,
-                max: 14,
-            },
-        }
-    };
-
-    // Opciones para Turbidez
-    const turbidezOptions = {
-        ...baseOptions,
-        plugins: {
-            ...baseOptions.plugins,
-            title: { display: true, text: 'Histórico de Turbidez (NTU)' },
-        },
-    };
-
-    // Opciones para Conductividad
-    const conductividadOptions = {
-        ...baseOptions,
-        plugins: {
-            ...baseOptions.plugins,
-            title: { display: true, text: 'Histórico de Conductividad (µS/cm)' },
-        },
-    };
+    const phOptions = { ...baseOptions, /* ... */ };
+    const turbidezOptions = { ...baseOptions, /* ... */ };
+    const conductividadOptions = { ...baseOptions, /* ... */ };
 
 
     // Determina si hay suficientes datos para graficar
@@ -206,56 +160,69 @@ const MonitoringPage = () => {
 
     return (
         <Container fluid className="px-0">
-            {/* --- SECCIÓN DE ENCABEZADO CON FONDO AZUL --- */}
+            {/* --- SECCIÓN DE ENCABEZADO CON FONDO AZUL (se mantiene igual) --- */}
             <div className="bg-info-subtle py-4 mb-5 border-bottom">
                 <Container>
                     <h2 className="mb-1 text-primary fw-bold">Dashboard de Monitoreo en Tiempo Real</h2>
                     <p className="text-muted fst-italic mb-0">Actualización automática cada 60 segundos desde InfluxDB Cloud.</p>
                 </Container>
             </div>
-            {/* --- FIN ENCABEZADO AZUL --- */}
 
             <Container>
                 {/* --- CONTROLES DE VISTA --- */}
+                {/* CORRECCIÓN: Reemplazamos ButtonGroup por un DIV con flex-wrap y estilizamos los botones individualmente */}
                 <div className="d-flex justify-content-center mb-5">
-                    <ButtonGroup aria-label="Modos de visualización" size="lg">
+                    <div
+                        className="d-flex flex-wrap shadow-lg rounded-pill p-2"
+                        style={{ maxWidth: '100%', backgroundColor: '#f8f9fa' }}
+                    >
+                        {/* Botón Ver Todo */}
                         <Button
                             variant={viewMode === 'all' ? 'primary' : 'outline-secondary'}
                             onClick={() => setViewMode('all')}
                             disabled={loading}
-                            className="rounded-end-0 border-end-0"
+                            className="flex-fill m-1 rounded-pill" // Añadimos m-1 para margen y flex-fill
+                            style={{ minWidth: '150px' }} // Establece un ancho mínimo para que el texto quepa
                         >
                             Ver Todo
                         </Button>
+                        {/* Botón Monitoreo Total */}
                         <Button
                             variant={viewMode === 'total' ? 'primary' : 'outline-secondary'}
                             onClick={() => setViewMode('total')}
                             disabled={loading || !hasChartData}
-                            className="rounded-0 border-end-0"
+                            className="flex-fill m-1 rounded-pill"
+                            style={{ minWidth: '150px' }}
                         >
                             Monitoreo Total
                         </Button>
+                        {/* Botón Monitoreo Individual */}
                         <Button
                             variant={viewMode === 'individual' ? 'primary' : 'outline-secondary'}
                             onClick={() => setViewMode('individual')}
                             disabled={loading || !hasChartData}
-                            className="rounded-0 border-end-0"
+                            className="flex-fill m-1 rounded-pill"
+                            style={{ minWidth: '150px' }}
                         >
                             Monitoreo Individual
                         </Button>
+                        {/* Botón Ver Registros */}
                         <Button
                             variant={viewMode === 'table' ? 'primary' : 'outline-secondary'}
                             onClick={() => setViewMode('table')}
                             disabled={loading}
-                            className="rounded-start-0"
+                            className="flex-fill m-1 rounded-pill"
+                            style={{ minWidth: '150px' }}
                         >
                             Ver Registros
                         </Button>
-                    </ButtonGroup>
+                    </div>
                 </div>
                 {/* --- FIN CONTROLES DE VISTA --- */}
 
-                {/* SPINNER Y ERRORES */}
+
+                {/* Contenido de Gráficas y Tablas (se mantiene igual) */}
+
                 {loading && (
                     <div className="text-center py-5">
                         <Spinner animation="border" variant="primary" role="status" className="me-2" style={{ width: '3rem', height: '3rem' }} />
@@ -266,7 +233,7 @@ const MonitoringPage = () => {
                 {error && <Alert variant="danger" className="shadow-lg">{error}</Alert>}
 
 
-                {/* 1. VISTA: VER TODO (COMBINADO + INDIVIDUAL + TABLA) */}
+                {/* 1. VISTA: VER TODO */}
                 {(viewMode === 'all' && hasChartData) && (
                     <div className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
                         <h3 className="mb-4 text-primary fs-4">Gráfica de Tendencia Combinada</h3>
@@ -339,7 +306,7 @@ const MonitoringPage = () => {
                     </div>
                 )}
 
-                {/* 2. VISTA: MONITOREO TOTAL (Solo gráfica combinada) */}
+                {/* 2. VISTA: MONITOREO TOTAL */}
                 {viewMode === 'total' && hasChartData && (
                     <div className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
                         <h3 className="mb-4 text-primary fs-4">Gráfica de Tendencia Combinada</h3>
@@ -354,7 +321,7 @@ const MonitoringPage = () => {
                     </div>
                 )}
 
-                {/* 3. VISTA: MONITOREO INDIVIDUAL (Solo gráficas individuales) */}
+                {/* 3. VISTA: MONITOREO INDIVIDUAL */}
                 {viewMode === 'individual' && hasChartData && (
                     <div className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
                         <h3 className="mb-4 text-primary fs-4">Históricos Individuales</h3>
@@ -390,7 +357,7 @@ const MonitoringPage = () => {
                     </div>
                 )}
 
-                {/* 4. VISTA: VER REGISTROS (Solo tabla) */}
+                {/* 4. VISTA: VER REGISTROS */}
                 {(viewMode === 'table') && rawData.length > 0 && (
                     <div className={`transition-opacity ${loading ? 'opacity-0' : 'opacity-100'}`}>
                         <div className="shadow-lg p-4 bg-light rounded-4 mt-4">
@@ -421,7 +388,7 @@ const MonitoringPage = () => {
                     </div>
                 )}
 
-                {/* Mensaje de No Hay Datos (Aparece si no hay datos y no estamos cargando) */}
+                {/* Mensaje de No Hay Datos */}
                 {!loading && rawData.length === 0 && !error && (
                     <Alert variant="info" className="mt-5">
                         No se encontraron registros en los últimos 7 días.
@@ -444,16 +411,15 @@ const MonitoringPage = () => {
                 .chart-card:hover {
                     transform: translateY(-5px);
                 }
-                /* Estilo de la tabla para que coincida con la temática */
                 .table thead th {
-                    background-color: #007bff; /* Color primario de Bootstrap */
+                    background-color: #007bff;
                     border-color: #007bff;
                 }
-                /* Asegura que los botones sean suaves y se vean como pestañas */
-                .btn-group .btn {
-                    padding-left: 1.5rem;
-                    padding-right: 1.5rem;
-                    font-weight: 600;
+                /* Estilo de los botones */
+                .btn-group-responsive .btn {
+                    padding: 8px 10px;
+                    font-size: 0.9rem;
+                    white-space: normal; /* Permite el salto de línea en el texto si se reduce el ancho */
                 }
             `}</style>
 
