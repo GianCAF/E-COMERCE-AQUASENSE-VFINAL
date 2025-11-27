@@ -30,7 +30,7 @@ const MarketAnalysisPage = () => {
                                         src={DASHBOARD_COMBINADO}
                                         fluid
                                         className="border rounded-3"
-                                        alt="Dashboard consolidado de pozos y cuerpos de agua en Hidalgo"
+                                        alt="Dashboard "
                                     />
                                     <p className="small text-center text-muted mt-2">
                                         Visualización integrada de la distribución geográfica y tipológica de los recursos hídricos.
@@ -53,7 +53,7 @@ const MarketAnalysisPage = () => {
                                     </p>
                                 </Col>
                                 <Col md={5} className="text-center">
-                                    <Image src={MAPA_CALOR_URL} fluid className="rounded-3 shadow-sm" alt="Mapa de calor de pozos" />
+                                    <Image src={MAPA_CALOR_URL} fluid className="rounded-3 shadow-sm" alt="Mapa de calor" />
                                 </Col>
                             </Row>
 
@@ -71,7 +71,7 @@ const MarketAnalysisPage = () => {
                                     </p>
                                 </Col>
                                 <Col md={5} className="text-center">
-                                    <Image src={GRAFICA_PASTEL_URL} fluid className="rounded-3 shadow-sm" alt="Gráfica de pastel de cuerpos de agua" />
+                                    <Image src={GRAFICA_PASTEL_URL} fluid className="rounded-3 shadow-sm" alt="Gráfica de pastel " />
                                 </Col>
                             </Row>
 
