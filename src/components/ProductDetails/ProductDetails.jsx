@@ -10,7 +10,7 @@ import visa from '../../imgcar/visa.png';
 import master from '../../imgcar/mastercad.png';
 
 // --- IMPORTAMOS EL COMPONENTE DE RESEÑAS DINÁMICAS ---
-import ReviewsSection from '../ReviewsSection';
+import ReviewsSection from '../../components/ReviewsSection/ReviewsSection';
 // NOTA: Asegúrate de que esta ruta '../ReviewsSection' sea correcta para tu proyecto.
 
 const ProductDetails = () => {
