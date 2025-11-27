@@ -2,8 +2,8 @@ import React from 'react';
 import { Container, Row, Col, Card, Image, ListGroup } from 'react-bootstrap';
 
 // NOTA: Estas URLs simulan la carga de tus gráficas de Tableau.
-const MAPA_CALOR_URL = "";
-const GRAFICA_PASTEL_URL = "https://placehold.co/400x400/E040FB/333333?text=GRÁFICA+DE+PASTEL";
+const MAPA_CALOR_URL = "/public/assets/mapadecalor.jpg";
+const GRAFICA_PASTEL_URL = "/public/assets/graficapastel.jpg";
 const DASHBOARD_COMBINADO = "/public/assets/dashboardIntegrador.jpg";
 
 
