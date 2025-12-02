@@ -20,7 +20,7 @@ const queryApi = influxDB.getQueryApi(org);
 
 // CONSULTA FLUX: Rango de 7 días, sin filtro de medición (para flexibilidad)
 const fluxQuery = `from(bucket: "${bucket}")
-  |> range(start: -7d)`;
+  |> range(start: -14d)`;
 
 const MonitoringPage = () => {
     const [rawData, setRawData] = useState([]);
