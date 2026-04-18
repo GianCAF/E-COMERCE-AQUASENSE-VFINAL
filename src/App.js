@@ -18,7 +18,7 @@ import MonitoringPage from './components/MonitoringPage/MonitoringPage.jsx';
 import { useAuth } from './context/AuthContext';
 import BottomNavBar from './components/BottomNavBar/BottomNavBar';
 import MarketAnalysisPage from './components/MarketAnalysisPage/MarketAnalysisPage.jsx'; 
-
+import FloatingCart from './components/FloatingCart/FloatingCart'; // <--- ASEGÚRATE DE IMPORTARLO
 import { Container, Card, Image, Button, Form, Alert } from 'react-bootstrap'; // Importaciones para la página de Perfil
 
 
@@ -171,46 +171,44 @@ const HomePage = () => (
     <PurchaseFlow />
   </>
 );
-
 function App() {
   return (
     <Router>
       <Header />
-      <main style={{ paddingBottom: '70px' }}>
+
+      {/* Añadimos min-vh-100 para que el layout sea consistente */}
+      <main style={{ paddingBottom: '90px', minHeight: '100vh' }}>
         <Routes>
-          {/* 1. RUTA PRINCIPAL (Icono Casa) */}
           <Route path="/" element={<HomePage />} />
-
-          {/* 2. RUTA AYUDA (Icono Pregunta) */}
           <Route path="/ayuda" element={<HelpPage />} />
-
-          {/* 3. RUTA ANÁLISIS DE MERCADO (Nueva ruta para las gráficas) */}
           <Route path="/mercado" element={<MarketAnalysisPage />} />
-
-          {/* RUTAS DEL MENÚ DE HAMBURGUESA (Acceso Total) */}
           <Route path="/sensores" element={<SensorDetailPage />} />
           <Route path="/membresias" element={<MembershipPage />} />
           <Route path="/problemas" element={<ProblemSolverPage />} />
           <Route path="/mapa" element={<MapPage />} />
+          <Route path="/cart" element={<CartPage />} />
 
-          {/* RUTA DE PERFIL (Protegida) */}
           <Route
             path="/perfil"
             element={<AuthWrapper element={<ProfilePage />} />}
           />
-
-          {/* Otras rutas */}
-          <Route path="/cart" element={<CartPage />} />
-
-          {/* Ruta Protegida para Monitoreo */}
           <Route
             path="/monitoreo"
             element={<AuthWrapper element={<MonitoringPage />} />}
           />
-
         </Routes>
       </main>
+
+      {/* ESTA ES LA CLAVE: 
+          Colocamos el Carrito Flotante AQUÍ. 
+          Al estar después de la BottomNavBar y con un z-index alto, 
+          se verá en la PC sin problemas.
+      */}
+      <FloatingCart />
+
       <Footer />
+
+      {/* Este componente es el que ves en el celular (la barra gris de abajo) */}
       <BottomNavBar />
     </Router>
   );
