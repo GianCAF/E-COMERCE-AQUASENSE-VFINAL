@@ -4,59 +4,77 @@ import { useCart } from '../../context/CartContext';
 
 const FloatingCart = () => {
     const { cartItems } = useCart();
-    // Calcula el número total de productos
     const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
-    // Función de seguimiento
-    const handleCartClick = () => {
-        if (window.dataLayer) {
-            window.dataLayer.push({
-                event: 'cart_click',
-                item_count: totalItems
-            });
-            console.log("GTM Evento: cart_click con items:", totalItems);
-        }
+    // Estilos responsivos usando una constante para limpiar el código
+    const cartStyle = {
+        position: 'fixed',
+        zIndex: 10000,
+        backgroundColor: '#007bff',
+        color: 'white',
+        borderRadius: '50%',
+        textDecoration: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '2px solid white',
+        boxShadow: '0px 4px 10px rgba(0,0,0,0.3)',
+        transition: 'all 0.3s ease'
     };
 
     return (
-        <div
-            onClick={handleCartClick} // Agregamos el evento al contenedor principal
-            style={{
-                position: 'fixed',
-                bottom: '2rem',
-                right: '2rem',
-                zIndex: 1050,
-                backgroundColor: '#007bff',
-                color: 'white',
-                borderRadius: '50%',
-                width: '60px',
-                height: '60px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-                cursor: 'pointer',
-            }}
-        >
-            <Link to="/cart" style={{ color: 'white', textDecoration: 'none' }}>
-                <i className="bi bi-cart3" style={{ fontSize: '1.8rem' }}></i>
-                {totalItems > 0 && (
-                    <span
-                        style={{
-                            position: 'absolute',
-                            top: '-5px',
-                            right: '-5px',
-                            backgroundColor: 'red',
-                            borderRadius: '50%',
-                            padding: '0.2rem 0.5rem',
-                            fontSize: '0.75rem',
-                        }}
-                    >
-                        {totalItems}
-                    </span>
-                )}
+        <>
+            <style>
+                {`
+                    /* Estilo para MÓVIL (Pantallas pequeñas) */
+                    .floating-cart-btn {
+                        bottom: 85px;   /* Se eleva para no tapar la BottomNavBar */
+                        right: 20px;
+                        width: 50px;    /* Más pequeño en celular */
+                        height: 50px;
+                    }
+                    .floating-cart-icon {
+                        font-size: 1.3rem;
+                    }
+
+                    /* Estilo para PC (Pantallas grandes) */
+                    @media (min-width: 768px) {
+                        .floating-cart-btn {
+                            bottom: 30px; /* Vuelve a su posición normal */
+                            right: 30px;
+                            width: 65px;  /* Tamaño normal en PC */
+                            height: 65px;
+                        }
+                        .floating-cart-icon {
+                            font-size: 1.8rem;
+                        }
+                    }
+                `}
+            </style>
+
+            <Link
+                to="/cart"
+                className="floating-cart-btn"
+                style={cartStyle}
+            >
+                <div className="position-relative">
+                    <i className={`bi bi-cart3 floating-cart-icon`}></i>
+
+                    {totalItems > 0 && (
+                        <span
+                            className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                            style={{
+                                fontSize: '0.7rem',
+                                padding: '0.35em 0.5em',
+                                border: '1px solid white'
+                            }}
+                        >
+                            {totalItems}
+                        </span>
+                    )}
+                </div>
             </Link>
-        </div>
+        </>
     );
 };
 

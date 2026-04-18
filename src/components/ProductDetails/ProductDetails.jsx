@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Button, Image, Badge, Collapse } from 'react-bootstrap';
 import { useCart } from '../../context/CartContext';
-// Importa la imagen que ya te funciona
-import imagen1 from '../../imgcar/imagen1.jpg'; //producto
+import imagen1 from '../../imgcar/imagen1.jpg';
 import imagen2 from '../../imgcar/imag2.jpg';
 import imagen3 from '../../imgcar/img3.jpg';
 import imagen4 from '../../imgcar/img4.jpg';
 import visa from '../../imgcar/visa.png';
 import master from '../../imgcar/mastercad.png';
-
-// --- IMPORTAMOS EL COMPONENTE DE RESEÑAS DINÁMICAS ---
 import ReviewsSection from '../../components/ReviewsSection/ReviewsSection';
-// NOTA: Asegúrate de que esta ruta '../ReviewsSection' sea correcta para tu proyecto.
 
 const ProductDetails = () => {
     const { addToCart } = useCart();
 
-    // NOTA: Mantenemos rating y reviewsCount estáticos aquí
-    // ya que el cálculo real se hace dentro del componente ReviewsSection.
     const productData = {
-        // Es crucial que el producto tenga un 'id' único
         id: 'aquasense-monitor-123',
         name: 'AquaSense - Monitor de Calidad de Agua Inteligente',
         price: 22390,
@@ -28,10 +21,10 @@ const ProductDetails = () => {
         stock: 25,
         seller: 'AquaSense Oficial',
         sellerLink: '#',
-        rating: 4.5, // Mantener para UI
-        reviewsCount: 37, // Mantener para UI
+        rating: 4.5,
+        reviewsCount: 37,
         description: `El AquaSense es la solución definitiva para el monitoreo de la calidad del agua. Con un diseño robusto y sensores de alta precisión (pH, Turbidez, Conductividad), te permite tener control total sobre tu fuente de agua en tiempo real.`,
-        longDescription: `El AquaSense no solo mide, sino que predice. Utiliza algoritmos de IA para analizar las tendencias de los datos y alertarte antes de que un problema de calidad del agua se vuelva crítico. Incluye una batería de iones de litio de 3000mAh que dura hasta 6 meses con una sola carga. Ideal para monitoreo remoto en estanques, acuarios industriales o pozos profundos.`,
+        longDescription: `El AquaSense no solo mide, sino que predice. Utiliza algoritmos de IA para analizar las tendencias de los datos e alertarte antes de que un problema de calidad del agua se vuelva crítico. Incluye una batería de iones de litio de 3000mAh que dura hasta 6 meses con una sola carga. Ideal para monitoreo remoto en estanques, acuarios industriales o pozos profundos.`,
         features: [
             'Monitoreo en tiempo real de pH, Turbidez y Conductividad',
             'Diseño compacto y resistente al agua (IP67)',
@@ -47,22 +40,14 @@ const ProductDetails = () => {
             { label: 'Batería', value: 'Ion-Litio 3000mAh' },
             { label: 'Dimensiones', value: '15cm x 10cm x 5cm' },
         ],
-        // ELIMINAMOS EL ARRAY ESTÁTICO DE RESEÑAS
     };
 
     const [mainImage, setMainImage] = useState(imagen1);
     const [openSpecs, setOpenSpecs] = useState(false);
     const [openDescription, setOpenDescription] = useState(false);
-    const productImages = [
-        { src: imagen1 },
-        { src: imagen2 },
-        { src: imagen3 },
-        { src: imagen4 },
-    ];
 
-    const mediosImage = [
-        { src: visa },
-        { src: master }
+    const productImages = [
+        { src: imagen1 }, { src: imagen2 }, { src: imagen3 }, { src: imagen4 },
     ];
 
     const handleThumbnailClick = (imageSrc) => {
@@ -79,7 +64,6 @@ const ProductDetails = () => {
             <Row>
                 {/* Columna de Imágenes */}
                 <Col md={5}>
-                    {/* Contenedor principal de la imagen: Fija la altura a 400px */}
                     <div
                         className="position-relative mb-3 d-flex justify-content-center align-items-center border shadow-sm rounded-4"
                         style={{ height: '400px', overflow: 'hidden' }}
@@ -99,27 +83,19 @@ const ProductDetails = () => {
                                 className={`thumbnail-wrapper me-2 mb-2 border rounded-3 ${mainImage === img.src ? 'border-primary border-3' : ''}`}
                                 onClick={() => handleThumbnailClick(img.src)}
                                 style={{
-                                    width: '90px',
-                                    height: '90px',
-                                    cursor: 'pointer',
-                                    flexShrink: 0,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    padding: '5px'
+                                    width: '90px', height: '90px',
+                                    cursor: 'pointer', flexShrink: 0,
+                                    display: 'flex', alignItems: 'center',
+                                    justifyContent: 'center', padding: '5px'
                                 }}
                             >
-                                <Image
-                                    src={img.src}
-                                    thumbnail
-                                    style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                                />
+                                <Image src={img.src} thumbnail style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                             </div>
                         ))}
                     </div>
                 </Col>
 
-                {/* Columna de Información Central del Producto */}
+                {/* Columna de Información Central */}
                 <Col md={4}>
                     <h1 className="mb-2">{productData.name}</h1>
                     <div className="d-flex align-items-center mb-3">
@@ -130,7 +106,7 @@ const ProductDetails = () => {
                         <span>({productData.reviewsCount} calificaciones)</span>
                     </div>
 
-                    <h2 className="text-primary my-3 fw-bold">${productData.price.toFixed(2)} MXN</h2>
+                    <h2 className="text-primary my-3 fw-bold">${productData.price.toLocaleString()} MXN</h2>
                     <p className="text-success">{productData.discount}</p>
 
                     <h5 className="mt-4">Características principales:</h5>
@@ -149,14 +125,15 @@ const ProductDetails = () => {
                             <Card.Title className="text-success">
                                 {productData.deliveryTime}
                             </Card.Title>
-                            <Card.Text>
+                            {/* CORRECCIÓN: Usamos as="div" para evitar errores de anidación */}
+                            <Card.Text as="div">
                                 <Badge bg={productData.stock > 0 ? "success" : "danger"} className="me-2">
                                     {productData.stock > 0 ? 'En Stock' : 'Agotado'}
                                 </Badge>
                                 {productData.stock > 0 && `(${productData.stock} disponibles)`}
                             </Card.Text>
 
-                            <Button variant="primary" size="lg" className="w-100 mb-2 rounded-3" disabled={productData.stock === 0}>
+                            <Button variant="primary" size="lg" className="w-100 mt-3 mb-2 rounded-3" disabled={productData.stock === 0}>
                                 Comprar ahora
                             </Button>
                             <Button
@@ -173,12 +150,12 @@ const ProductDetails = () => {
                                 Vendido por <a href={productData.sellerLink}>{productData.seller}</a>
                             </div>
                             <hr />
-                            <p className="small">
+                            <div className="small mb-2">
                                 <i className="bi bi-shield-check me-1"></i>Compra Protegida: recibes el producto que esperabas o te devolvemos tu dinero.
-                            </p>
-                            <p className="small">
+                            </div>
+                            <div className="small">
                                 <i className="bi bi-arrow-return-left me-1"></i>Devolución gratis. Tienes 30 días para devolver el producto.
-                            </p>
+                            </div>
                         </Card.Body>
                     </Card>
 
@@ -195,16 +172,12 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- SECCIONES COLAPSABLES --- */}
-
-            {/* 1. Características Detalladas (Especificaciones) */}
+            {/* Secciones Colapsables */}
             <Row className="mt-5">
                 <Col md={12}>
                     <h3
                         onClick={() => setOpenSpecs(!openSpecs)}
-                        aria-controls="specs-collapse"
-                        aria-expanded={openSpecs}
-                        className="mb-3 text-primary cursor-pointer hover-underline"
+                        className="mb-3 text-primary"
                         style={{ cursor: 'pointer' }}
                     >
                         Características Detalladas
@@ -212,7 +185,7 @@ const ProductDetails = () => {
                     </h3>
                     <Collapse in={openSpecs}>
                         <div id="specs-collapse">
-                            <Row className="border p-3 rounded-3 bg-light">
+                            <Row className="border p-3 rounded-3 bg-light mx-0">
                                 {productData.specs.map((spec, index) => (
                                     <Col sm={6} md={4} key={index} className="mb-3">
                                         <strong>{spec.label}:</strong> {spec.value}
@@ -225,13 +198,10 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* 2. Descripción Detallada */}
             <Row className="mt-4">
                 <Col md={12}>
                     <h3
                         onClick={() => setOpenDescription(!openDescription)}
-                        aria-controls="description-collapse"
-                        aria-expanded={openDescription}
                         className="mb-3 text-primary"
                         style={{ cursor: 'pointer' }}
                     >
@@ -247,10 +217,8 @@ const ProductDetails = () => {
                 </Col>
             </Row>
 
-            {/* --- Opiniones del Producto (Dinámicas) --- */}
             <Row className="mt-4">
                 <Col md={12}>
-                    {/* Insertamos el componente que ya hace la carga y el formulario */}
                     <ReviewsSection productId={productData.id} />
                     <hr />
                 </Col>

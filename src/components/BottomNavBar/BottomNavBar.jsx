@@ -37,8 +37,7 @@ const BottomNavBar = () => {
         { id: 'tips', icon: 'bi-question-circle-fill', label: 'Ayuda', path: '/ayuda' },
         // 3. MONITOREO (Usa función para validación de login)
         { id: 'monitor', icon: 'bi-graph-up', label: 'Monitoreo', action: handleMonitorClick, path: '/monitoreo' },
-        // 4. CARRITO (Icono Carrito)
-        { id: 'cart', icon: 'bi-cart-fill', label: 'Carrito', path: '/cart' },
+       
     ];
 
     // Función para determinar si el ícono debe estar activo
