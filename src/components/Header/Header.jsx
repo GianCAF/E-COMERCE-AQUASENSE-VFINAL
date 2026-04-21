@@ -3,6 +3,8 @@ import { Navbar, Nav, Container, Button, NavDropdown, Modal, Offcanvas, ListGrou
 import AuthModal from '../AuthModal/AuthModal';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
+import logoAqua from '../../assets/logo_AquaSense.png'
+
 
 const Header = () => {
     const [showModal, setShowModal] = useState(false);
@@ -87,15 +89,14 @@ const Header = () => {
                         <i className="bi bi-list fs-4"></i>
                     </Button>
 
-                    {/* Brand ahora siempre regresa a la raíz */}
-                    <Navbar.Brand as={Link} to="/">
+                    <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
                         <img
-                            src="/assets/logos/aquasense-logo.png"
-                            height="30"
-                            className="d-inline-block align-top"
+                            src={logoAqua} 
+                            height="40"
+                            className="d-inline-block align-top me-2"
                             alt="AquaSense Logo"
                         />
-                        {' '}AquaSense
+                        <span className="fw-bold">AquaSense</span>
                     </Navbar.Brand>
 
                     {/* El toggle de Bootstrap se mantiene para pantallas pequeñas si expand="lg" */}
